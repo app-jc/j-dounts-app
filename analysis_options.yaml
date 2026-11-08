@@ -1,0 +1,40 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    # No implicit dynamic and Type-safe: keeps Result<T, Failure> and repository types honest
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
+    # For generated code (Drift, freezed, gen-l10n)
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "lib/l10n/app_localizations*.dart"
+
+linter:
+  rules:
+    # Consistent imports across feature folders
+    - always_use_package_imports
+
+    # Smaller diffs, cleaner commit history
+    - prefer_final_locals
+    - require_trailing_commas
+
+    # Leak prevention: Drift streams, BLoC, controllers, connectivity
+    - unawaited_futures
+    - cancel_subscriptions
+    - close_sinks
+
+    # Default
+    - avoid_print: false
+    - prefer_single_quotes: true
