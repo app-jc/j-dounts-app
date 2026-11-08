@@ -1,1 +1,101 @@
-{}
+{
+  "@@locale": "my",
+  "appTitle": "J'Donuts",
+  "onboardingTitle": "အရသာစုံလင်တဲ့ ဒိုးနတ်ဝိုင်းလေးများ",
+  "getStarted": "စတင်လိုက်ကြစို့",
+  "alreadyHaveAccount": "အကောင့်ရှိပြီးသားလား?",
+  "logIn": "ဝင်ရောက်ရန်",
+  "legalAgreement": "ဆက်လက်လုပ်ဆောင်ခြင်းဖြင့် ကျွန်ုပ်တို့၏ အသုံးပြုမှုစည်းမျဉ်းများနှင့် ကိုယ်ရေးအချက်အလက်မူဝါဒကို ဖတ်ရှုပြီး သဘောတူကြောင်း အသိအမှတ်ပြုပါသည်။",
+  "termsOfUse": "အသုံးပြုမှုစည်းမျဉ်းများ",
+  "privacyPolicy": "ကိုယ်ရေးအချက်အလက်မူဝါဒ",
+  "phoneTitle": "သင့်ဖုန်းနံပါတ်ကို ရိုက်ထည့်ပါ",
+  "otpTitle": "သင့်ဖုန်းနံပါတ်ကို အတည်ပြုပါ",
+  "otpSent": "ပို့ထားသော ဂဏန်း ၆ လုံး OTP သည် {phone} သို့ ရောက်ရှိလာပါမည်",
+  "@otpSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "didntReceiveCode": "ကုဒ်မရရှိဘူးလား?",
+  "resendIn": "{time} မိနစ်အတွင်း ပြန်ပို့မည်",
+  "@resendIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nameTitle": "သင့်နာမည်က ဘာလဲ?",
+  "firstName": "အမည်",
+  "lastName": "မျိုးရိုးအမည်",
+  "dobTitle": "သင့်မွေးနေ့က ဘယ်နေ့လဲ?",
+  "continueLabel": "ဆက်ရန်",
+  "welcomeTitle": "J'donuts ကမ္ဘာမှ ကြိုဆိုပါသည်",
+  "letsExplore": "စူးစမ်းကြည့်ရအောင်",
+  "pointsLeftToTier": "{tier} အဖွဲ့ဝင်ဖြစ်ရန် ပွိုင့် {n} ကျန်ပါသည်",
+  "@pointsLeftToTier": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "seasonalSpecials": "ရာသီအလိုက် အထူးအစီအစဉ်များ",
+  "popular": "လူကြိုက်များသော",
+  "orderAgain": "ထပ်မံမှာယူရန်",
+  "nearbyShops": "သင့်အနီးတွင် J'Donut ဆိုင် {n} ဆိုင်ရှိပါသည်။",
+  "@nearbyShops": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreNow": "ယခုပဲ ကြည့်ရှုပါ",
+  "orderOnline": "အွန်လိုင်းမှ မှာယူရန်",
+  "tierMember": "{tier} အဖွဲ့ဝင်",
+  "@tierMember": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "newBadge": "အသစ်",
+  "whatsThis": "ဒါက ဘာလဲ?",
+  "addToCart": "ခြင်းထဲသို့ ထည့်ရန်",
+  "rewardsTitle": "J' Donuts ဆုလာဘ်များ",
+  "rewards": "ဆုလာဘ်များ",
+  "totalPoints": "စုစုပေါင်း ပွိုင့်",
+  "eatMoreEarnMore": "များများစား၊ ပွိုင့်များများရ",
+  "gift": "လက်ဆောင်",
+  "earn": "ရယူရန်",
+  "points": "ပွိုင့် {n}",
+  "@points": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "youreHereNow": "လက်ရှိအဆင့်",
+  "pointsRemainingToTier": "{tier} ဖြစ်ရန် ပွိုင့် {n} ကျန်ပါသည်",
+  "@pointsRemainingToTier": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "youllBeHereSoon": "မကြာမီ ဤနေရာသို့ ရောက်မည်",
+  "homeTab": "ပင်မ",
+  "rewardTab": "ဆုလာဘ်"
+}

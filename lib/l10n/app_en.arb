@@ -1,1 +1,101 @@
-{}
+{
+  "@@locale": "en",
+  "appTitle": "J'Donuts",
+  "onboardingTitle": "Round food for every mood",
+  "getStarted": "Let's get started",
+  "alreadyHaveAccount": "Already have an account?",
+  "logIn": "Log in",
+  "legalAgreement": "By continuing, you acknowledge that you have read and agree to our Terms of Use and Privacy Policy.",
+  "termsOfUse": "Terms of Use",
+  "privacyPolicy": "Privacy Policy",
+  "phoneTitle": "Enter your phone number",
+  "otpTitle": "Verify your number",
+  "otpSent": "We've sent 6 digit OTP to {phone}",
+  "@otpSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "didntReceiveCode": "Didn't receive the code?",
+  "resendIn": "resend in {time} min",
+  "@resendIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nameTitle": "What's your name?",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "dobTitle": "What's your date of birth?",
+  "continueLabel": "Continue",
+  "welcomeTitle": "Welcome to the world of J'donuts",
+  "letsExplore": "Let's explore",
+  "pointsLeftToTier": "{n} points left to become {tier} Member",
+  "@pointsLeftToTier": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "seasonalSpecials": "Seasonal specials",
+  "popular": "Popular",
+  "orderAgain": "Order again",
+  "nearbyShops": "There are {n} J'Donut shops near you.",
+  "@nearbyShops": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreNow": "Explore now",
+  "orderOnline": "Order Online",
+  "tierMember": "{tier} member",
+  "@tierMember": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "newBadge": "New",
+  "whatsThis": "What's this?",
+  "addToCart": "Add to cart",
+  "rewardsTitle": "J' Donuts Rewards",
+  "rewards": "Rewards",
+  "totalPoints": "Total points",
+  "eatMoreEarnMore": "Eat more earn more",
+  "gift": "Gift",
+  "earn": "EARN",
+  "points": "{n} pts",
+  "@points": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "youreHereNow": "You're here now",
+  "pointsRemainingToTier": "{n} pts Remaining to become {tier}",
+  "@pointsRemainingToTier": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "youllBeHereSoon": "You'll be here soon",
+  "homeTab": "Home",
+  "rewardTab": "Reward"
+}
