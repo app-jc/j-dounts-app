@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:drift/native.dart';
 
 import 'package:j_dounts_app/core/error/result.dart';
@@ -13,6 +11,7 @@ const Duration fakeAuthLatency = Duration(seconds: 1);
 const String _fakeOtpCode = '123456';
 const int _sqliteUniqueConstraintCode = 2067;
 
+/// A Mock Backend (FakeAuthRepository) of [AuthRepository], stimulates authentication operations.
 final class FakeAuthRepository implements AuthRepository {
   FakeAuthRepository(
     this._users, {
@@ -23,21 +22,16 @@ final class FakeAuthRepository implements AuthRepository {
   final LocalUserSource _users;
   final Duration latency;
   final Clock clock;
-  final Map<String, String> _pendingOtps = {};
 
   @override
   Future<Result<void>> requestOtp(String phone) async {
+    // Validate the phone number format.
     if (!_isCanonicalPhone(phone)) {
       return const FailureResult(ValidationFailure());
     }
+    // Simulate network latency.
     await Future<void>.delayed(latency);
-    try {
-      if (await _users.findMemberIdByPhone(phone) == null) {
-        _pendingOtps[phone] = _generateOtp();
-      }
-    } on SqliteException catch (error) {
-      return FailureResult(StorageFailure(cause: error));
-    }
+
     return const Success<void>(null);
   }
 
@@ -46,7 +40,9 @@ final class FakeAuthRepository implements AuthRepository {
     if (!_isCanonicalPhone(phone)) {
       return const FailureResult(ValidationFailure());
     }
-    return Success(_pendingOtps[phone]);
+    return Success(
+      await _users.findMemberIdByPhone(phone) == null ? _fakeOtpCode : null,
+    );
   }
 
   @override
@@ -97,15 +93,16 @@ final class FakeAuthRepository implements AuthRepository {
     }
     await Future<void>.delayed(latency);
     try {
+      // Check if the phone number is already registered. If it is, return a conflict failure.
       if (await _users.findMemberIdByPhone(phone) != null) {
         return const FailureResult(
           ConflictFailure(code: ConflictFailureCode.duplicatePhone),
         );
       }
-      if (_pendingOtps[phone] != code) {
+      // Check if the provided OTP code matches the pending OTP for the given phone number.
+      if (code != _fakeOtpCode) {
         return const FailureResult(AuthFailure(code: AuthFailureCode.wrongOtp));
       }
-      _pendingOtps.remove(phone);
       return const Success<void>(null);
     } on SqliteException catch (error) {
       return FailureResult(StorageFailure(cause: error));
@@ -130,8 +127,9 @@ final class FakeAuthRepository implements AuthRepository {
         )) {
       return const FailureResult(ValidationFailure());
     }
-
+    // Simulate network latency.
     await Future<void>.delayed(latency);
+
     try {
       final memberId = await _users.createMember(
         phone: phone,
@@ -149,7 +147,6 @@ final class FakeAuthRepository implements AuthRepository {
           ),
         );
       }
-
       return FailureResult(StorageFailure(cause: error));
     }
   }
@@ -159,7 +156,9 @@ final class FakeAuthRepository implements AuthRepository {
     if (memberId <= 0) {
       return const FailureResult(ValidationFailure());
     }
+    // Simulate network latency.
     await Future<void>.delayed(latency);
+
     try {
       await _users.deleteMember(memberId);
       return const Success<void>(null);
@@ -168,10 +167,12 @@ final class FakeAuthRepository implements AuthRepository {
     }
   }
 
+  /// Validates if the provided phone number is in canonical format.
   bool _isCanonicalPhone(String phone) => normalizePhone(phone) == phone;
 
-  String _generateOtp() => Random().nextInt(1000000).toString().padLeft(6, '0');
+  /// Generates a random 6-digit OTP code
 
+  /// Normalizes the last name by trimming whitespace and returning `null` if it's empty.
   String? _normalizeLastName(String? lastName) {
     final normalized = lastName?.trim();
     return normalized == null || normalized.isEmpty ? null : normalized;

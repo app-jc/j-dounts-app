@@ -119,6 +119,9 @@
   "youllBeHereSoon": "You'll be here soon",
   "homeTab": "Home",
   "rewardTab": "Reward",
+  "settingsTitle": "Settings",
+  "settings": "Settings",
+  "logOut": "Log out",
   "seedFailureTitle": "We couldn't prepare the app",
   "seedFailureMessage": "Your app data couldn't be loaded. Please try again.",
   "retry": "Try again"

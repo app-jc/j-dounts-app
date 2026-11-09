@@ -15,6 +15,7 @@ import 'package:j_dounts_app/features/auth/presentation/phone/phone_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/screens/onboarding_screen.dart';
 import 'package:j_dounts_app/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:j_dounts_app/features/auth/presentation/session/session_notifier.dart';
+import 'package:j_dounts_app/features/settings/presentation/settings_screen.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 
 void main() {
@@ -75,6 +76,34 @@ void main() {
     await session.startSession(42);
 
     await _expectRoute(tester, harness, '/product/7', '/product/7');
+  });
+
+  testWidgets('authenticated settings logout returns to onboarding', (
+    tester,
+  ) async {
+    await session.startSession(42);
+    harness.createRouter(initialLocation: AppRoutes.settings);
+    await tester.pumpWidget(_localizedApp(harness.router));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SettingsScreen), findsOneWidget);
+    await tester.tap(find.text('Log out'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(OnboardingScreen), findsOneWidget);
+    expect(session.isAuthenticated, isFalse);
+  });
+
+  testWidgets('authenticated Home exposes Settings navigation', (tester) async {
+    await session.startSession(42);
+    harness.createRouter(initialLocation: AppRoutes.home);
+    await tester.pumpWidget(_localizedApp(harness.router));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SettingsScreen), findsOneWidget);
   });
 }
 

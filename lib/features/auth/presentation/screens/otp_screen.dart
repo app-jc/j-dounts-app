@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -32,7 +30,7 @@ class OtpScreen extends StatelessWidget {
       }
       if (flow == AuthFlowType.registration) {
         context.read<AuthFlowCubit>().setStep(AuthFlowStep.name);
-        unawaited(context.push(AppRoutes.name));
+        context.pushReplacement(AppRoutes.name);
         return;
       }
       await getIt<SessionNotifier>().startSession(state.identity!.memberId);
@@ -110,6 +108,7 @@ class OtpScreen extends StatelessWidget {
         _ => localizations.otpUnexpected,
       };
 
+  /// Formats a duration as a string in the format "mm:ss".
   String _formatDuration(Duration duration) =>
       '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
 }

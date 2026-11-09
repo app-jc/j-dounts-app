@@ -8,12 +8,14 @@ import 'package:j_dounts_app/app/theme/app_spacing.dart';
 import 'package:j_dounts_app/app/theme/app_typography.dart';
 import 'package:j_dounts_app/core/widgets/primary_button.dart';
 import 'package:j_dounts_app/features/auth/presentation/session/session_notifier.dart';
+import 'package:j_dounts_app/features/auth/presentation/flow/auth_flow_cubit.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({required this.memberId, super.key});
+  const WelcomeScreen({required this.memberId, this.authFlowCubit, super.key});
 
   final int? memberId;
+  final AuthFlowCubit? authFlowCubit;
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -73,6 +75,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     if (memberId == null || _isStarting) return;
     setState(() => _isStarting = true);
     await getIt<SessionNotifier>().startSession(memberId);
+    // WIRE: clear in-memory registration state before entering Home.
+    widget.authFlowCubit?.reset();
     if (!mounted) return;
     context.go(AppRoutes.home);
   }

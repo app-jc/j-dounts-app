@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:j_dounts_app/app/router/app_routes.dart';
+import 'package:j_dounts_app/app/di/injection.dart';
 import 'package:j_dounts_app/app/theme/app_colors.dart';
 import 'package:j_dounts_app/app/theme/app_spacing.dart';
 import 'package:j_dounts_app/app/theme/app_typography.dart';
+import 'package:j_dounts_app/core/time/clock.dart';
 import 'package:j_dounts_app/core/error/result.dart';
 import 'package:j_dounts_app/core/widgets/app_text_field.dart';
 import 'package:j_dounts_app/features/auth/presentation/flow/auth_flow_cubit.dart';
@@ -41,7 +43,10 @@ class _PhoneScreenState extends State<PhoneScreen> {
   Widget build(BuildContext context) => BlocConsumer<PhoneCubit, PhoneState>(
     listener: (context, state) {
       if (state.status != PhoneStatus.submitted) return;
-      context.read<AuthFlowCubit>().updatePhone(state.phone);
+      final flow = context.read<AuthFlowCubit>();
+      // WIRE: hand the canonical phone and OTP deadline ownership to auth flow.
+      flow.updateCanonicalPhone(state.phone);
+      flow.beginOtp(state.phone, getIt<Clock>());
       context.read<AuthFlowCubit>().setStep(AuthFlowStep.otp);
       context.go(AppRoutes.otp);
     },
@@ -52,8 +57,10 @@ class _PhoneScreenState extends State<PhoneScreen> {
         title: localizations.phoneTitle,
         progressStep: 1,
         progressLabel: localizations.phoneTitle,
-        onBack: () =>
-            context.canPop() ? context.pop() : context.go(AppRoutes.onboarding),
+        onBack: () {
+          context.read<AuthFlowCubit>().reset();
+          context.go(AppRoutes.onboarding);
+        },
         onContinue:
             flow != null &&
                 state.isValid &&
@@ -64,7 +71,10 @@ class _PhoneScreenState extends State<PhoneScreen> {
         child: _PhoneField(
           controller: _controller,
           errorText: _errorText(localizations, state),
-          onChanged: context.read<PhoneCubit>().updatePhone,
+          onChanged: (value) {
+            context.read<PhoneCubit>().updatePhone(value);
+            context.read<AuthFlowCubit>().updatePhone(value);
+          },
           onFocusChanged: (hasFocus) {
             if (!hasFocus) context.read<PhoneCubit>().markBlurred();
           },

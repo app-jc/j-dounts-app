@@ -9,6 +9,7 @@ import 'package:j_dounts_app/features/auth/domain/auth_repository.dart';
 import 'package:j_dounts_app/features/auth/domain/auth_identity.dart';
 import 'package:j_dounts_app/features/auth/domain/otp_state_machine.dart';
 import 'package:j_dounts_app/features/auth/domain/validators/auth_validators.dart';
+import 'package:j_dounts_app/features/auth/presentation/flow/auth_flow_cubit.dart';
 
 enum OtpStatus { idle, verifying, verified, resending }
 
@@ -74,10 +75,16 @@ final class OtpCubit extends Cubit<OtpState> {
     this._authRepository, {
     required this.phone,
     this.isRegistration = false,
+    this.authFlowCubit,
+    OtpAttemptState? initialAttempt,
     Clock? clock,
   }) : _clock = clock ?? const SystemClock(),
        super(
-         OtpState(attempt: OtpStateMachine.start(clock ?? const SystemClock())),
+         OtpState(
+           attempt:
+               initialAttempt ??
+               OtpStateMachine.start(clock ?? const SystemClock()),
+         ),
        ) {
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
     if (isRegistration) unawaited(_prepareAutofill());
@@ -87,6 +94,7 @@ final class OtpCubit extends Cubit<OtpState> {
   final Clock _clock;
   final String phone;
   final bool isRegistration;
+  final AuthFlowCubit? authFlowCubit;
   late final Timer _timer;
   Timer? _autofillTimer;
   bool _isBusy = false;
@@ -112,6 +120,7 @@ final class OtpCubit extends Cubit<OtpState> {
     );
     if (failure == null) {
       _isBusy = false;
+      authFlowCubit?.markOtpVerified();
       emit(
         state.copyWith(
           status: OtpStatus.verified,
@@ -126,6 +135,7 @@ final class OtpCubit extends Cubit<OtpState> {
         _clock,
       );
       _isBusy = false;
+      authFlowCubit?.updateOtpAttempt(nextAttempt);
       emit(
         state.copyWith(
           attempt: nextAttempt,
@@ -155,6 +165,7 @@ final class OtpCubit extends Cubit<OtpState> {
     }
     _isBusy = false;
     final attempt = OtpStateMachine.resend(state.attempt, _clock);
+    authFlowCubit?.updateOtpAttempt(attempt);
     emit(
       state.copyWith(
         attempt: attempt,

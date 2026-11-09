@@ -45,7 +45,7 @@ class _NameScreenState extends State<NameScreen> {
         progressStep: 3,
         progressLabel: localizations.nameTitle,
         onBack: () =>
-            context.canPop() ? context.pop() : context.go(AppRoutes.otp),
+            context.canPop() ? context.pop() : context.go(AppRoutes.phone),
         onContinue: state.isValid
             ? () {
                 context.read<AuthFlowCubit>().updateName(

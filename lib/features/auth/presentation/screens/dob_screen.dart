@@ -75,6 +75,9 @@ class DobScreen extends StatelessWidget {
     final value = await _pick(context, 12, selected ?? 1);
     if (value != null && context.mounted) {
       context.read<DobCubit>().select(month: value);
+      context.read<AuthFlowCubit>().updateRawDateOfBirth(
+        month: value.toString(),
+      );
     }
   }
 
@@ -82,6 +85,7 @@ class DobScreen extends StatelessWidget {
     final value = await _pick(context, 31, selected ?? 1);
     if (value != null && context.mounted) {
       context.read<DobCubit>().select(day: value);
+      context.read<AuthFlowCubit>().updateRawDateOfBirth(day: value.toString());
     }
   }
 
@@ -95,6 +99,9 @@ class DobScreen extends StatelessWidget {
     );
     if (value != null && context.mounted) {
       context.read<DobCubit>().select(year: value);
+      context.read<AuthFlowCubit>().updateRawDateOfBirth(
+        year: value.toString(),
+      );
     }
   }
 

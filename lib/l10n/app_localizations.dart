@@ -482,6 +482,24 @@ abstract class AppLocalizations {
   /// **'Reward'**
   String get rewardTab;
 
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @logOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logOut;
+
   /// No description provided for @seedFailureTitle.
   ///
   /// In en, this message translates to:

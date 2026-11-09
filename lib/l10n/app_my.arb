@@ -118,5 +118,8 @@
   },
   "youllBeHereSoon": "မကြာမီ ဤနေရာသို့ ရောက်မည်",
   "homeTab": "ပင်မ",
-  "rewardTab": "ဆုလာဘ်"
+  "rewardTab": "ဆုလာဘ်",
+  "settingsTitle": "ဆက်တင်များ",
+  "settings": "ဆက်တင်များ",
+  "logOut": "ထွက်မည်"
 }

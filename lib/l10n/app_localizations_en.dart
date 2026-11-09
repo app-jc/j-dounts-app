@@ -221,6 +221,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rewardTab => 'Reward';
 
   @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get logOut => 'Log out';
+
+  @override
   String get seedFailureTitle => 'We couldn\'t prepare the app';
 
   @override

@@ -222,6 +222,15 @@ class AppLocalizationsMy extends AppLocalizations {
   String get rewardTab => 'ဆုလာဘ်';
 
   @override
+  String get settingsTitle => 'ဆက်တင်များ';
+
+  @override
+  String get settings => 'ဆက်တင်များ';
+
+  @override
+  String get logOut => 'ထွက်မည်';
+
+  @override
   String get seedFailureTitle => 'We couldn\'t prepare the app';
 
   @override

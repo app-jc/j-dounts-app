@@ -14,6 +14,7 @@ import 'package:j_dounts_app/features/auth/presentation/phone/phone_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/otp/otp_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/dob/dob_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/session/session_notifier.dart';
+import 'package:j_dounts_app/features/auth/domain/otp_state_machine.dart';
 import 'package:j_dounts_app/features/home/data/home_repository_impl.dart';
 import 'package:j_dounts_app/features/home/domain/home_repository.dart';
 import 'package:j_dounts_app/features/product/data/product_repository_impl.dart';
@@ -23,6 +24,7 @@ import 'package:j_dounts_app/features/rewards/domain/rewards_repository.dart';
 
 final GetIt getIt = GetIt.instance;
 
+// Configures the dependencies for the application using the GetIt service locator.
 void configureDependencies() {
   getIt.registerLazySingleton<Clock>(SystemClock.new);
   getIt.registerLazySingleton<AppDatabase>(AppDatabase.new);
@@ -57,13 +59,21 @@ void configureDependencies() {
   getIt.registerFactory<PhoneCubit>(() => PhoneCubit(getIt<AuthRepository>()));
   getIt.registerFactoryParam<
     OtpCubit,
-    ({String phone, bool isRegistration}),
+    ({
+      String phone,
+      bool isRegistration,
+      AuthFlowCubit authFlowCubit,
+      OtpAttemptState? initialAttempt,
+    }),
     void
   >(
     (params, _) => OtpCubit(
       getIt<AuthRepository>(),
       phone: params.phone,
       isRegistration: params.isRegistration,
+      authFlowCubit: params.authFlowCubit,
+      initialAttempt: params.initialAttempt,
+      clock: getIt<Clock>(),
     ),
   );
   getIt.registerFactoryParam<

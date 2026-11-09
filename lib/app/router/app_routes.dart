@@ -6,5 +6,6 @@ abstract final class AppRoutes {
   static const dateOfBirth = '/auth/dob';
   static const welcome = '/welcome';
   static const home = '/home';
+  static const settings = '/settings';
   static const product = '/product/:productId';
 }

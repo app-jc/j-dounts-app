@@ -16,8 +16,14 @@ const int _maximumNationalNumberLength = 10;
 final RegExp _phoneFormatting = RegExp(r'[\s-]');
 final RegExp _asciiDigits = RegExp(r'^[0-9]+$');
 
+/// This file contains validation functions for
+/// phone numbers, OTPs, names, and dates of birth,
+/// specifically tailored for Myanmar's formats and requirements.
+
+/// Normalizes a phone number to the international format for Myanmar (+95).
 String? normalizePhone(String input) {
   var value = input.replaceAll(_phoneFormatting, '');
+  // Accept common Myanmar input forms, then return one canonical form.
   if (value.startsWith('+')) {
     if (!value.startsWith(_myanmarInternationalPrefix)) return null;
     value = value.substring(_myanmarInternationalPrefix.length);
@@ -31,14 +37,18 @@ String? normalizePhone(String input) {
   return '+$_myanmarCountryCode$value';
 }
 
+/// Checks if the given phone number is in the canonical international format for Myanmar (+95).
 bool _isMyanmarMobileNationalNumber(String value) {
+  // Myanmar mobile numbers must start with 9 and contain ASCII digits only.
   return value.startsWith(_myanmarMobilePrefix) &&
       value.length >= _minimumNationalNumberLength &&
       value.length <= _maximumNationalNumberLength &&
       _asciiDigits.hasMatch(value);
 }
 
+/// Checks if the given OTP is valid.
 bool isValidOtp(String value) =>
+    // OTP validation checks format only; code ownership belongs to the repository.
     value.length == otpLength && _asciiDigits.hasMatch(value);
 
 bool isValidFirstName(String value) => _isValidName(value, isRequired: true);
@@ -47,6 +57,7 @@ bool isValidLastName(String value) => _isValidName(value, isRequired: false);
 
 bool _isValidName(String value, {required bool isRequired}) {
   final trimmed = value.trim();
+  // Validate grapheme length, then allow letters/marks but not digits or punctuation.
   if (trimmed.isEmpty) return !isRequired;
   if (trimmed.characters.length > maximumNameGraphemes) return false;
   var needsLetter = true;
@@ -81,6 +92,7 @@ bool isValidDateOfBirth({
   if (year < 1 || year > today.year) return false;
   final birthDate = _createValidDate(year, month, day);
   if (birthDate == null) return false;
+  // Compare against today and calculate age from the injected clock.
   if (birthDate.isAfter(DateTime(today.year, today.month, today.day))) {
     return false;
   }
@@ -95,6 +107,7 @@ DateTime? _createValidDate(int year, int month, int day) {
     return null;
   }
   final date = DateTime(year, month, day);
+  // DateTime normalizes invalid dates, so round-trip fields to reject them.
   if (date.year != year || date.month != month || date.day != day) {
     return null;
   }
@@ -112,6 +125,7 @@ int _ageOnDate(DateTime birthDate, DateTime today) {
 }
 
 int _anniversaryDay(DateTime birthDate, int year) {
+  // Treat Feb 29 birthdays as Feb 28 in non-leap years.
   final isLeapBirthdayInCommonYear =
       birthDate.month == DateTime.february &&
       birthDate.day == 29 &&
