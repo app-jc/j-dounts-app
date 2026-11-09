@@ -55,20 +55,17 @@ void main() {
       expect(isValidLastName('Smith Jones'), isTrue);
     });
 
-    test(
-      'accepts Latin graphemes and rejects Myanmar text and punctuation',
-      () {
-        expect(isValidFirstName('José'), isTrue);
-        expect(isValidFirstName('e\u0301'), isTrue);
-        expect(isValidFirstName('\u0301e'), isFalse);
-        expect(isValidFirstName('Aung Min'), isTrue);
-        expect(isValidFirstName('မောင်'), isFalse);
-        expect(isValidFirstName('Aung2'), isFalse);
-        expect(isValidFirstName('Aung၁'), isFalse);
-        expect(isValidLastName('Smith-Win'), isFalse);
-        expect(isValidLastName('Doe!'), isFalse);
-      },
-    );
+    test('accepts Latin and Myanmar names and rejects punctuation', () {
+      expect(isValidFirstName('José'), isTrue);
+      expect(isValidFirstName('e\u0301'), isTrue);
+      expect(isValidFirstName('\u0301e'), isFalse);
+      expect(isValidFirstName('Aung Min'), isTrue);
+      expect(isValidFirstName('မောင်'), isTrue);
+      expect(isValidFirstName('Aung2'), isFalse);
+      expect(isValidFirstName('Aung၁'), isFalse);
+      expect(isValidLastName('Smith-Win'), isFalse);
+      expect(isValidLastName('Doe!'), isFalse);
+    });
 
     test('enforces the trimmed 50-grapheme boundary', () {
       expect(isValidFirstName(_repeat('A', maximumNameGraphemes)), isTrue);

@@ -10,7 +10,14 @@ void main() {
 
     expect(english.continueLabel, 'Continue');
     expect(english.otpSent('+95912345678'), contains('+95912345678'));
+    expect(english.continueWithGoogle, 'Continue with Google');
+    expect(
+      english.placeholderActionMessage,
+      "This option isn't available yet.",
+    );
     expect(burmese.continueLabel, 'ဆက်ရန်');
     expect(burmese.otpSent('+95912345678'), contains('+95912345678'));
+    expect(burmese.continueWithGoogle, contains('ဆက်လက်'));
+    expect(burmese.placeholderActionMessage, contains('ရရှိနိုင်ပါ'));
   });
 }

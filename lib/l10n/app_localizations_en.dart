@@ -29,13 +29,49 @@ class AppLocalizationsEn extends AppLocalizations {
       'By continuing, you acknowledge that you have read and agree to our Terms of Use and Privacy Policy.';
 
   @override
+  String get legalAgreementPrefix =>
+      'By continuing, you acknowledge that you have read and agree to our ';
+
+  @override
+  String get legalAgreementJoin => ' and ';
+
+  @override
+  String get legalAgreementSuffix => '.';
+
+  @override
   String get termsOfUse => 'Terms of Use';
 
   @override
   String get privacyPolicy => 'Privacy Policy';
 
   @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get continueWithApple => 'Continue with Apple';
+
+  @override
+  String get continueWithFacebook => 'Continue with Facebook';
+
+  @override
+  String get placeholderActionMessage => 'This option isn\'t available yet.';
+
+  @override
   String get phoneTitle => 'Enter your phone number';
+
+  @override
+  String get phoneHint => 'Phone number';
+
+  @override
+  String get phoneInvalid => 'Enter a valid Myanmar phone number.';
+
+  @override
+  String get phoneNotRegistered =>
+      'This number isn\'t registered. Register instead.';
+
+  @override
+  String get phoneAlreadyRegistered =>
+      'This number is already registered. Log in instead.';
 
   @override
   String get otpTitle => 'Verify your number';
@@ -47,6 +83,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get didntReceiveCode => 'Didn\'t receive the code?';
+
+  @override
+  String get resend => 'Resend code';
+
+  @override
+  String get otpWrong => 'That code is incorrect.';
+
+  @override
+  String get otpLocked => 'Too many attempts. Resend a new code to try again.';
+
+  @override
+  String get otpUnexpected =>
+      'We couldn\'t verify that code. Please try again.';
 
   @override
   String resendIn(String time) {
@@ -63,7 +112,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastName => 'Last Name';
 
   @override
+  String get firstNameInvalid => 'Enter a valid first name.';
+
+  @override
+  String get lastNameInvalid => 'Enter a valid last name.';
+
+  @override
   String get dobTitle => 'What\'s your date of birth?';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get dobInvalid => 'Enter a valid date of birth.';
 
   @override
   String get continueLabel => 'Continue';

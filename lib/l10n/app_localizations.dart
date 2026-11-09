@@ -134,6 +134,24 @@ abstract class AppLocalizations {
   /// **'By continuing, you acknowledge that you have read and agree to our Terms of Use and Privacy Policy.'**
   String get legalAgreement;
 
+  /// No description provided for @legalAgreementPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you acknowledge that you have read and agree to our '**
+  String get legalAgreementPrefix;
+
+  /// No description provided for @legalAgreementJoin.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get legalAgreementJoin;
+
+  /// No description provided for @legalAgreementSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'.'**
+  String get legalAgreementSuffix;
+
   /// No description provided for @termsOfUse.
   ///
   /// In en, this message translates to:
@@ -146,11 +164,59 @@ abstract class AppLocalizations {
   /// **'Privacy Policy'**
   String get privacyPolicy;
 
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @continueWithApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get continueWithApple;
+
+  /// No description provided for @continueWithFacebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Facebook'**
+  String get continueWithFacebook;
+
+  /// No description provided for @placeholderActionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This option isn\'t available yet.'**
+  String get placeholderActionMessage;
+
   /// No description provided for @phoneTitle.
   ///
   /// In en, this message translates to:
   /// **'Enter your phone number'**
   String get phoneTitle;
+
+  /// No description provided for @phoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get phoneHint;
+
+  /// No description provided for @phoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid Myanmar phone number.'**
+  String get phoneInvalid;
+
+  /// No description provided for @phoneNotRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'This number isn\'t registered. Register instead.'**
+  String get phoneNotRegistered;
+
+  /// No description provided for @phoneAlreadyRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'This number is already registered. Log in instead.'**
+  String get phoneAlreadyRegistered;
 
   /// No description provided for @otpTitle.
   ///
@@ -169,6 +235,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Didn\'t receive the code?'**
   String get didntReceiveCode;
+
+  /// No description provided for @resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resend;
+
+  /// No description provided for @otpWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is incorrect.'**
+  String get otpWrong;
+
+  /// No description provided for @otpLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Resend a new code to try again.'**
+  String get otpLocked;
+
+  /// No description provided for @otpUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t verify that code. Please try again.'**
+  String get otpUnexpected;
 
   /// No description provided for @resendIn.
   ///
@@ -194,11 +284,47 @@ abstract class AppLocalizations {
   /// **'Last Name'**
   String get lastName;
 
+  /// No description provided for @firstNameInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid first name.'**
+  String get firstNameInvalid;
+
+  /// No description provided for @lastNameInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid last name.'**
+  String get lastNameInvalid;
+
   /// No description provided for @dobTitle.
   ///
   /// In en, this message translates to:
   /// **'What\'s your date of birth?'**
   String get dobTitle;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @dobInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid date of birth.'**
+  String get dobInvalid;
 
   /// No description provided for @continueLabel.
   ///

@@ -14,9 +14,6 @@ const int _minimumNationalNumberLength = 8;
 const int _maximumNationalNumberLength = 10;
 
 final RegExp _phoneFormatting = RegExp(r'[\s-]');
-final RegExp _englishName = RegExp(
-  r'^(?:[A-Za-z\u00C0-\u024F][\u0300-\u036F]*| )+$',
-);
 final RegExp _asciiDigits = RegExp(r'^[0-9]+$');
 
 String? normalizePhone(String input) {
@@ -51,9 +48,28 @@ bool isValidLastName(String value) => _isValidName(value, isRequired: false);
 bool _isValidName(String value, {required bool isRequired}) {
   final trimmed = value.trim();
   if (trimmed.isEmpty) return !isRequired;
-  return trimmed.characters.length <= maximumNameGraphemes &&
-      _englishName.hasMatch(trimmed);
+  if (trimmed.characters.length > maximumNameGraphemes) return false;
+  var needsLetter = true;
+  for (final rune in trimmed.runes) {
+    if (rune == 0x20) {
+      needsLetter = true;
+      continue;
+    }
+    if (needsLetter && !_isNameLetter(rune)) return false;
+    if (!_isNameLetter(rune) && !_isNameMark(rune)) return false;
+    needsLetter = false;
+  }
+  return !needsLetter;
 }
+
+bool _isNameLetter(int rune) =>
+    (rune >= 0x41 && rune <= 0x5A) ||
+    (rune >= 0x61 && rune <= 0x7A) ||
+    (rune >= 0xC0 && rune <= 0x24F) ||
+    (rune >= 0x1000 && rune <= 0x102A);
+
+bool _isNameMark(int rune) =>
+    (rune >= 0x300 && rune <= 0x36F) || (rune >= 0x102B && rune <= 0x103E);
 
 bool isValidDateOfBirth({
   required int year,

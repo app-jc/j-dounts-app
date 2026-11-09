@@ -49,7 +49,6 @@ app.*.map.json
 
 
 # AI Coding
-AGENTS.md
 /docs/
 /docs/ai_coding/
 /docs/resources/

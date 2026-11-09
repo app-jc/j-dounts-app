@@ -1,1 +1,130 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:j_dounts_app/app/router/app_routes.dart';
+import 'package:j_dounts_app/app/theme/app_colors.dart';
+import 'package:j_dounts_app/app/theme/app_spacing.dart';
+import 'package:j_dounts_app/app/theme/app_typography.dart';
+import 'package:j_dounts_app/core/error/result.dart';
+import 'package:j_dounts_app/core/widgets/app_text_field.dart';
+import 'package:j_dounts_app/features/auth/presentation/flow/auth_flow_cubit.dart';
+import 'package:j_dounts_app/features/auth/presentation/phone/phone_cubit.dart';
+import 'package:j_dounts_app/features/auth/presentation/widgets/auth_scaffold.dart';
+import 'package:j_dounts_app/l10n/app_localizations.dart';
+
+class PhoneScreen extends StatefulWidget {
+  const PhoneScreen({super.key});
+
+  @override
+  State<PhoneScreen> createState() => _PhoneScreenState();
+}
+
+class _PhoneScreenState extends State<PhoneScreen> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+      text: context.read<AuthFlowCubit>().state.draft.phone,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocConsumer<PhoneCubit, PhoneState>(
+    listener: (context, state) {
+      if (state.status != PhoneStatus.submitted) return;
+      context.read<AuthFlowCubit>().updatePhone(state.phone);
+      context.read<AuthFlowCubit>().setStep(AuthFlowStep.otp);
+      context.go(AppRoutes.otp);
+    },
+    builder: (context, state) {
+      final localizations = AppLocalizations.of(context);
+      final flow = context.read<AuthFlowCubit>().state.flow;
+      return AuthScaffold(
+        title: localizations.phoneTitle,
+        progressStep: 1,
+        progressLabel: localizations.phoneTitle,
+        onBack: () =>
+            context.canPop() ? context.pop() : context.go(AppRoutes.onboarding),
+        onContinue:
+            flow != null &&
+                state.isValid &&
+                state.status != PhoneStatus.submitting
+            ? () => context.read<PhoneCubit>().submit(flow)
+            : null,
+        isLoading: state.status == PhoneStatus.submitting,
+        child: _PhoneField(
+          controller: _controller,
+          errorText: _errorText(localizations, state),
+          onChanged: context.read<PhoneCubit>().updatePhone,
+          onFocusChanged: (hasFocus) {
+            if (!hasFocus) context.read<PhoneCubit>().markBlurred();
+          },
+        ),
+      );
+    },
+  );
+
+  String? _errorText(AppLocalizations localizations, PhoneState state) {
+    if (!state.hasBlurred && state.failure == null) return null;
+    return switch (state.failure) {
+      AuthFailure(code: AuthFailureCode.notRegistered) =>
+        localizations.phoneNotRegistered,
+      ConflictFailure(code: ConflictFailureCode.duplicatePhone) =>
+        localizations.phoneAlreadyRegistered,
+      _ when !state.isValid => localizations.phoneInvalid,
+      _ => null,
+    };
+  }
+}
+
+class _PhoneField extends StatelessWidget {
+  const _PhoneField({
+    required this.controller,
+    required this.errorText,
+    required this.onChanged,
+    required this.onFocusChanged,
+  });
+
+  final TextEditingController controller;
+  final String? errorText;
+  final ValueChanged<String> onChanged;
+  final ValueChanged<bool> onFocusChanged;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        height: AppSpacing.fieldHeight,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceCard,
+          borderRadius: BorderRadius.circular(AppSpacing.fieldRadius),
+        ),
+        alignment: Alignment.center,
+        child: Text('+95', style: AppTypography.fieldHint),
+      ),
+      const SizedBox(width: AppSpacing.sm),
+      Expanded(
+        child: AppTextField(
+          controller: controller,
+          hintText: AppLocalizations.of(context).phoneHint,
+          errorText: errorText,
+          keyboardType: TextInputType.phone,
+          textInputAction: TextInputAction.done,
+          onChanged: onChanged,
+          onFocusChanged: onFocusChanged,
+        ),
+      ),
+    ],
+  );
+}

@@ -29,13 +29,50 @@ class AppLocalizationsMy extends AppLocalizations {
       'ဆက်လက်လုပ်ဆောင်ခြင်းဖြင့် ကျွန်ုပ်တို့၏ အသုံးပြုမှုစည်းမျဉ်းများနှင့် ကိုယ်ရေးအချက်အလက်မူဝါဒကို ဖတ်ရှုပြီး သဘောတူကြောင်း အသိအမှတ်ပြုပါသည်။';
 
   @override
+  String get legalAgreementPrefix => 'ဆက်လက်လုပ်ဆောင်ခြင်းဖြင့် ကျွန်ုပ်တို့၏ ';
+
+  @override
+  String get legalAgreementJoin => 'နှင့် ';
+
+  @override
+  String get legalAgreementSuffix =>
+      'ကို ဖတ်ရှုပြီး သဘောတူကြောင်း အသိအမှတ်ပြုပါသည်။';
+
+  @override
   String get termsOfUse => 'အသုံးပြုမှုစည်းမျဉ်းများ';
 
   @override
   String get privacyPolicy => 'ကိုယ်ရေးအချက်အလက်မူဝါဒ';
 
   @override
+  String get continueWithGoogle => 'Google ဖြင့် ဆက်လက်ရန်';
+
+  @override
+  String get continueWithApple => 'Apple ဖြင့် ဆက်လက်ရန်';
+
+  @override
+  String get continueWithFacebook => 'Facebook ဖြင့် ဆက်လက်ရန်';
+
+  @override
+  String get placeholderActionMessage =>
+      'ဤရွေးချယ်မှုကို မကြာမီ ရရှိနိုင်ပါမည်။';
+
+  @override
   String get phoneTitle => 'သင့်ဖုန်းနံပါတ်ကို ရိုက်ထည့်ပါ';
+
+  @override
+  String get phoneHint => 'ဖုန်းနံပါတ်';
+
+  @override
+  String get phoneInvalid => 'မှန်ကန်သော မြန်မာဖုန်းနံပါတ်ကို ထည့်ပါ။';
+
+  @override
+  String get phoneNotRegistered =>
+      'ဤနံပါတ်ကို မှတ်ပုံမတင်ရသေးပါ။ အကောင့်ဖွင့်ပါ။';
+
+  @override
+  String get phoneAlreadyRegistered =>
+      'ဤနံပါတ်ကို မှတ်ပုံတင်ပြီးဖြစ်ပါသည်။ ဝင်ရောက်ပါ။';
 
   @override
   String get otpTitle => 'သင့်ဖုန်းနံပါတ်ကို အတည်ပြုပါ';
@@ -47,6 +84,19 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get didntReceiveCode => 'ကုဒ်မရရှိဘူးလား?';
+
+  @override
+  String get resend => 'ကုဒ်ကို ပြန်ပို့ရန်';
+
+  @override
+  String get otpWrong => 'ကုဒ် မှားယွင်းနေပါသည်။';
+
+  @override
+  String get otpLocked =>
+      'ကြိုးစားမှုများလွန်းပါသည်။ ကုဒ်အသစ် ပြန်ပို့ပြီး ထပ်ကြိုးစားပါ။';
+
+  @override
+  String get otpUnexpected => 'ကုဒ်ကို အတည်မပြုနိုင်ပါ။ ထပ်ကြိုးစားပါ။';
 
   @override
   String resendIn(String time) {
@@ -63,7 +113,25 @@ class AppLocalizationsMy extends AppLocalizations {
   String get lastName => 'မျိုးရိုးအမည်';
 
   @override
+  String get firstNameInvalid => 'မှန်ကန်သော အမည်ကို ထည့်ပါ။';
+
+  @override
+  String get lastNameInvalid => 'မှန်ကန်သော မျိုးရိုးအမည်ကို ထည့်ပါ။';
+
+  @override
   String get dobTitle => 'သင့်မွေးနေ့က ဘယ်နေ့လဲ?';
+
+  @override
+  String get month => 'လ';
+
+  @override
+  String get day => 'ရက်';
+
+  @override
+  String get year => 'နှစ်';
+
+  @override
+  String get dobInvalid => 'မှန်ကန်သော မွေးသက္ကရာဇ်ကို ထည့်ပါ။';
 
   @override
   String get continueLabel => 'ဆက်ရန်';

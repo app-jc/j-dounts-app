@@ -26,7 +26,7 @@ class _ErrorStateState extends State<ErrorState> {
       await widget.onRetry();
     } on Exception catch (error, stackTrace) {
       developer.log(
-        'Database seed retry failed.',
+        'App initialization retry failed.',
         name: 'bootstrap',
         error: error,
         stackTrace: stackTrace,
