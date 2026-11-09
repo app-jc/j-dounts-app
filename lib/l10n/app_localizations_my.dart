@@ -222,6 +222,15 @@ class AppLocalizationsMy extends AppLocalizations {
   String get rewardTab => 'ဆုလာဘ်';
 
   @override
+  String get menuTab => 'မီနူး';
+
+  @override
+  String get walletTab => 'ပိုက်ဆံအိတ်';
+
+  @override
+  String get offlineBanner => 'အော့ဖ်လိုင်းမုဒ်';
+
+  @override
   String get settingsTitle => 'ဆက်တင်များ';
 
   @override
@@ -239,4 +248,16 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get retry => 'Try again';
+
+  @override
+  String get homeSectionEmpty => 'လောလောဆယ် ဘာမျှမရှိသေးပါ။';
+
+  @override
+  String get homeSectionError => 'ဤအပိုင်းကို မရရှိနိုင်သေးပါ။';
+
+  @override
+  String get productNotFound => 'ထုတ်ကုန်ကို မတွေ့ပါ။';
+
+  @override
+  String get addedToCart => 'ခြင်းထဲသို့ ထည့်ပြီးပါပြီ။';
 }

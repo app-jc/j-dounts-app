@@ -100,11 +100,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         entrances: _entrances.sublist(_collageItemCount),
                         onRegister: () {
                           flow.startRegistration();
-                          context.push(AppRoutes.phone);
+                          context.go(AppRoutes.phone);
                         },
                         onLogin: () {
                           flow.startLogin();
-                          context.push(AppRoutes.phone);
+                          context.go(AppRoutes.phone);
                         },
                         onPlaceholder: () => _showPlaceholder(
                           context,

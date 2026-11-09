@@ -4,6 +4,7 @@ import 'package:j_dounts_app/core/database/app_database.dart';
 import 'package:j_dounts_app/core/database/seed/seed_service.dart';
 import 'package:j_dounts_app/core/member/data/member_repository_impl.dart';
 import 'package:j_dounts_app/core/member/domain/member_repository.dart';
+import 'package:j_dounts_app/core/network/connectivity_service.dart';
 import 'package:j_dounts_app/core/time/clock.dart';
 import 'package:j_dounts_app/features/auth/data/fake_auth_repository.dart';
 import 'package:j_dounts_app/features/auth/data/local_user_source.dart';
@@ -27,6 +28,7 @@ final GetIt getIt = GetIt.instance;
 // Configures the dependencies for the application using the GetIt service locator.
 void configureDependencies() {
   getIt.registerLazySingleton<Clock>(SystemClock.new);
+  getIt.registerLazySingleton<ConnectivityService>(ConnectivityServiceImpl.new);
   getIt.registerLazySingleton<AppDatabase>(AppDatabase.new);
   getIt.registerLazySingleton<SeedService>(
     () => SeedService(db: getIt<AppDatabase>()),

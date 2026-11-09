@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:j_dounts_app/app/theme/app_colors.dart';
 import 'package:j_dounts_app/app/theme/app_spacing.dart';
@@ -138,17 +139,17 @@ class OnboardingSocialRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _SocialButton(
-          Icons.public,
+          FontAwesomeIcons.google,
           localizations.continueWithGoogle,
           onPressed,
         ),
         _SocialButton(
-          Icons.phone_iphone,
+          FontAwesomeIcons.apple,
           localizations.continueWithApple,
           onPressed,
         ),
         _SocialButton(
-          Icons.people_outline,
+          FontAwesomeIcons.facebook,
           localizations.continueWithFacebook,
           onPressed,
         ),
@@ -160,7 +161,7 @@ class OnboardingSocialRow extends StatelessWidget {
 class _SocialButton extends StatelessWidget {
   const _SocialButton(this.icon, this.label, this.onPressed);
 
-  final IconData icon;
+  final FaIconData icon;
   final String label;
   final VoidCallback onPressed;
 
@@ -168,6 +169,6 @@ class _SocialButton extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
     tooltip: label,
     onPressed: onPressed,
-    icon: Icon(icon, color: AppColors.textPrimary),
+    icon: FaIcon(icon, color: AppColors.textPrimary),
   );
 }

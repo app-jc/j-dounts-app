@@ -221,6 +221,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rewardTab => 'Reward';
 
   @override
+  String get menuTab => 'Menu';
+
+  @override
+  String get walletTab => 'Wallet';
+
+  @override
+  String get offlineBanner => 'Offline mode';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override
@@ -238,4 +247,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Try again';
+
+  @override
+  String get homeSectionEmpty => 'Nothing here yet.';
+
+  @override
+  String get homeSectionError => 'This section is unavailable.';
+
+  @override
+  String get productNotFound => 'Product not found';
+
+  @override
+  String get addedToCart => 'Added to cart';
 }

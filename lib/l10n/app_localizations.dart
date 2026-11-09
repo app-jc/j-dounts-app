@@ -482,6 +482,24 @@ abstract class AppLocalizations {
   /// **'Reward'**
   String get rewardTab;
 
+  /// No description provided for @menuTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get menuTab;
+
+  /// No description provided for @walletTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get walletTab;
+
+  /// No description provided for @offlineBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline mode'**
+  String get offlineBanner;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:
@@ -517,6 +535,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get retry;
+
+  /// No description provided for @homeSectionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet.'**
+  String get homeSectionEmpty;
+
+  /// No description provided for @homeSectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'This section is unavailable.'**
+  String get homeSectionError;
+
+  /// No description provided for @productNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found'**
+  String get productNotFound;
+
+  /// No description provided for @addedToCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to cart'**
+  String get addedToCart;
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:j_dounts_app/app/di/injection.dart';
@@ -19,7 +19,14 @@ import 'package:j_dounts_app/features/auth/presentation/screens/welcome_screen.d
 import 'package:j_dounts_app/features/auth/presentation/phone/phone_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/session/session_notifier.dart';
 import 'package:j_dounts_app/features/settings/presentation/settings_screen.dart';
+import 'package:j_dounts_app/features/home/presentation/home_screen.dart';
+import 'package:j_dounts_app/features/home/domain/home_repository.dart';
+import 'package:j_dounts_app/features/product/domain/product_repository.dart';
+import 'package:j_dounts_app/features/product/presentation/product_screen.dart';
+import 'package:j_dounts_app/core/network/connectivity_service.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
+import 'package:j_dounts_app/app/shell/main_shell.dart';
+import 'package:j_dounts_app/app/shell/placeholder_screen.dart';
 
 GoRouter createAppRouter({
   required SessionNotifier sessionNotifier,
@@ -28,9 +35,25 @@ GoRouter createAppRouter({
   OtpCubit Function(String phone, bool isRegistration)? otpCubitFactory,
   DobCubit Function(String phone, String firstName, String? lastName)?
   dobCubitFactory,
+  HomeRepository? homeRepository,
+  ProductRepository? productRepository,
+  ConnectivityService? connectivityService,
   String initialLocation = AppRoutes.onboarding,
 }) {
   final createPhoneCubit = phoneCubitFactory ?? (() => getIt<PhoneCubit>());
+  final resolvedHomeRepository =
+      homeRepository ??
+      (getIt.isRegistered<HomeRepository>() ? getIt<HomeRepository>() : null);
+  final resolvedProductRepository =
+      productRepository ??
+      (getIt.isRegistered<ProductRepository>()
+          ? getIt<ProductRepository>()
+          : null);
+  final resolvedConnectivityService =
+      connectivityService ??
+      (getIt.isRegistered<ConnectivityService>()
+          ? getIt<ConnectivityService>()
+          : null);
   return GoRouter(
     initialLocation: initialLocation,
     refreshListenable: sessionNotifier,
@@ -146,18 +169,105 @@ GoRouter createAppRouter({
           ),
         ),
       ),
-      _route(AppRoutes.home),
-      GoRoute(
-        path: AppRoutes.settings,
-        pageBuilder: (context, state) => stepPage(
-          key: state.pageKey,
-          child: SettingsScreen(sessionNotifier: sessionNotifier),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => MainShell(
+          navigationShell: navigationShell,
+          connectivityService: resolvedConnectivityService,
         ),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.home,
+                pageBuilder: (context, state) => stepPage(
+                  key: state.pageKey,
+                  child: resolvedHomeRepository == null
+                      ? PlaceholderScreen(
+                          key: const ValueKey<String>('route:/home'),
+                          title: AppLocalizations.of(context).homeTab,
+                          actionLabel: AppLocalizations.of(context).settings,
+                          onAction: () => context.go(AppRoutes.settings),
+                        )
+                      : HomeScreen(
+                          key: const ValueKey<String>('route:/home'),
+                          repository: resolvedHomeRepository,
+                          memberId: sessionNotifier.memberId!,
+                          onSettings: () => context.go(AppRoutes.settings),
+                          onProductTap: (code) => context.go(
+                            AppRoutes.product.replaceFirst(':productId', code),
+                          ),
+                        ),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.rewards,
+                pageBuilder: (context, state) => stepPage(
+                  key: state.pageKey,
+                  child: PlaceholderScreen(
+                    title: AppLocalizations.of(context).rewards,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.menu,
+                pageBuilder: (context, state) => stepPage(
+                  key: state.pageKey,
+                  child: PlaceholderScreen(
+                    title: AppLocalizations.of(context).menuTab,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.wallet,
+                pageBuilder: (context, state) => stepPage(
+                  key: state.pageKey,
+                  child: PlaceholderScreen(
+                    title: AppLocalizations.of(context).walletTab,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.settings,
+                pageBuilder: (context, state) => stepPage(
+                  key: state.pageKey,
+                  child: SettingsScreen(sessionNotifier: sessionNotifier),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.product,
-        pageBuilder: (context, state) =>
-            stepPage(key: state.pageKey, child: _placeholder(state.uri.path)),
+        pageBuilder: (context, state) => stepPage(
+          key: state.pageKey,
+          child: resolvedProductRepository == null
+              ? PlaceholderScreen(
+                  key: ValueKey<String>('route:${state.uri.path}'),
+                  title: state.uri.path,
+                )
+              : ProductScreen(
+                  key: ValueKey<String>('route:${state.uri.path}'),
+                  repository: resolvedProductRepository,
+                  code: state.pathParameters['productId']!,
+                ),
+        ),
       ),
     ],
   );
@@ -188,23 +298,3 @@ String? appRedirect({
   if (location == AppRoutes.onboarding || isAuthRoute) return null;
   return AppRoutes.onboarding;
 }
-
-GoRoute _route(String path) => GoRoute(
-  path: path,
-  pageBuilder: (context, state) =>
-      stepPage(key: state.pageKey, child: _placeholder(path)),
-);
-
-Widget _placeholder(String route) => Builder(
-  builder: (context) => Scaffold(
-    key: ValueKey<String>('route:$route'),
-    body: route == AppRoutes.home
-        ? Center(
-            child: ElevatedButton(
-              onPressed: () => context.go(AppRoutes.settings),
-              child: Text(AppLocalizations.of(context).settings),
-            ),
-          )
-        : null,
-  ),
-);

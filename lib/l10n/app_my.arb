@@ -119,7 +119,14 @@
   "youllBeHereSoon": "မကြာမီ ဤနေရာသို့ ရောက်မည်",
   "homeTab": "ပင်မ",
   "rewardTab": "ဆုလာဘ်",
+  "menuTab": "မီနူး",
+  "walletTab": "ပိုက်ဆံအိတ်",
+  "offlineBanner": "အော့ဖ်လိုင်းမုဒ်",
   "settingsTitle": "ဆက်တင်များ",
   "settings": "ဆက်တင်များ",
-  "logOut": "ထွက်မည်"
+  "logOut": "ထွက်မည်",
+  "homeSectionEmpty": "လောလောဆယ် ဘာမျှမရှိသေးပါ။",
+  "homeSectionError": "ဤအပိုင်းကို မရရှိနိုင်သေးပါ။",
+  "productNotFound": "ထုတ်ကုန်ကို မတွေ့ပါ။",
+  "addedToCart": "ခြင်းထဲသို့ ထည့်ပြီးပါပြီ။"
 }
