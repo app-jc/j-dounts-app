@@ -355,6 +355,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reward'**
   String get rewardTab;
+
+  /// No description provided for @seedFailureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t prepare the app'**
+  String get seedFailureTitle;
+
+  /// No description provided for @seedFailureMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your app data couldn\'t be loaded. Please try again.'**
+  String get seedFailureMessage;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate

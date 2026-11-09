@@ -1,0 +1,265 @@
+{
+  "member": {
+    "phone": "+95912345678",
+    "first_name": "Charlotte",
+    "last_name": "Bennett",
+    "date_of_birth": "2010-06-06",
+    "photo": "asset:assets/images/members/demo_avatar.jpg",
+    "total_points": 680000,
+    "notification_count": 2
+  },
+  "tiers": [
+    { "name": "Bronze", "threshold": 0, "sort_order": 0 },
+    { "name": "Silver", "threshold": 679000, "sort_order": 1 },
+    { "name": "Gold", "threshold": 680500, "sort_order": 2 },
+    { "name": "Platinum", "threshold": 700000, "sort_order": 3 }
+  ],
+  "products": [
+    {
+      "code": "JD022123",
+      "name": "Coconut Donut",
+      "price_mmk": 3200,
+      "is_new": true,
+      "discount_label": null,
+      "description": "A soft donut topped with coconut flakes.",
+      "image": "asset:assets/images/products/coconut_flake_donut.jpg"
+    },
+    {
+      "code": "JD022124",
+      "name": "Strawberry Chocolate Donut",
+      "price_mmk": 3500,
+      "is_new": false,
+      "discount_label": "10% OFF",
+      "description": "A chocolate-glazed donut with strawberry topping.",
+      "image": "asset:assets/images/products/strawberry_chocolate_donut.jpg"
+    },
+    {
+      "code": "JD022125",
+      "name": "Purple Glazed Donut",
+      "price_mmk": 3000,
+      "is_new": false,
+      "discount_label": null,
+      "description": "A donut finished with a smooth purple glaze.",
+      "image": "asset:assets/images/products/purple_glazed_donut.jpg"
+    },
+    {
+      "code": "JD022126",
+      "name": "Caramel Glazed Donut",
+      "price_mmk": 3200,
+      "is_new": false,
+      "discount_label": null,
+      "description": "A classic donut finished with caramel glaze.",
+      "image": "asset:assets/images/products/caramel_glazed_donut.jpg"
+    },
+    {
+      "code": "JD022127",
+      "name": "Assorted Donut Box",
+      "price_mmk": 9800,
+      "is_new": false,
+      "discount_label": null,
+      "description": "A box of assorted J'Donuts favorites.",
+      "image": "asset:assets/images/products/assorted_donut_box.jpg"
+    },
+    {
+      "code": "JD022128",
+      "name": "Seasonal Mixed Box",
+      "price_mmk": 12000,
+      "is_new": false,
+      "discount_label": "15% OFF",
+      "description": "A seasonal selection of mixed donuts.",
+      "image": "asset:assets/images/products/seasonal_mixed_box.jpg"
+    },
+    {
+      "code": "JD022129",
+      "name": "Dalgona Coffee",
+      "price_mmk": 4500,
+      "is_new": false,
+      "discount_label": null,
+      "description": "Whipped dalgona coffee served over iced coffee.",
+      "image": "asset:assets/images/products/dalgona_coffee.jpg"
+    }
+  ],
+  "sections": [
+    {
+      "id": "seasonal",
+      "title": "Seasonal Specials",
+      "type": "seasonal",
+      "layout_style": "wide_card",
+      "sort_order": 0,
+      "see_all": true
+    },
+    {
+      "id": "popular",
+      "title": "Popular",
+      "type": "popular",
+      "layout_style": "tall_tile",
+      "sort_order": 1,
+      "see_all": true
+    },
+    {
+      "id": "order_again",
+      "title": "Order Again",
+      "type": "order_again",
+      "layout_style": "tall_tile",
+      "sort_order": 2,
+      "see_all": false
+    }
+  ],
+  "section_products": [
+    {
+      "section_id": "seasonal",
+      "product_code": "JD022128",
+      "sort_order": 0,
+      "discount_override": null
+    },
+    {
+      "section_id": "seasonal",
+      "product_code": "JD022124",
+      "sort_order": 1,
+      "discount_override": "20% OFF"
+    },
+    {
+      "section_id": "popular",
+      "product_code": "JD022123",
+      "sort_order": 0,
+      "discount_override": null
+    },
+    {
+      "section_id": "popular",
+      "product_code": "JD022125",
+      "sort_order": 1,
+      "discount_override": null
+    },
+    {
+      "section_id": "popular",
+      "product_code": "JD022126",
+      "sort_order": 2,
+      "discount_override": null
+    },
+    {
+      "section_id": "popular",
+      "product_code": "JD022127",
+      "sort_order": 3,
+      "discount_override": null
+    },
+    {
+      "section_id": "popular",
+      "product_code": "JD022129",
+      "sort_order": 4,
+      "discount_override": null
+    },
+    {
+      "section_id": "order_again",
+      "product_code": "JD022123",
+      "sort_order": 0,
+      "discount_override": null
+    },
+    {
+      "section_id": "order_again",
+      "product_code": "JD022129",
+      "sort_order": 1,
+      "discount_override": null
+    }
+  ],
+  "banners": [
+    {
+      "id": "seasonal_promo",
+      "title": "Seasonal Specials",
+      "image": "asset:assets/images/banners/seasonal_promo.jpg",
+      "sort_order": 0,
+      "target": null
+    },
+    {
+      "id": "new_shop_promo",
+      "title": "New Shop Opening",
+      "image": "asset:assets/images/banners/new_shop_promo.jpg",
+      "sort_order": 1,
+      "target": null
+    }
+  ],
+  "shops": [
+    {
+      "id": "downtown",
+      "name": "Downtown",
+      "photo": "asset:assets/images/previews/shop_preview.jpg",
+      "sort_order": 0
+    },
+    {
+      "id": "riverside",
+      "name": "Riverside",
+      "photo": "asset:assets/images/shops/shop_02.jpg",
+      "sort_order": 1
+    },
+    {
+      "id": "market_square",
+      "name": "Market Square",
+      "photo": "asset:assets/images/shops/shop_03.jpg",
+      "sort_order": 2
+    },
+    {
+      "id": "garden_city",
+      "name": "Garden City",
+      "photo": "asset:assets/images/shops/shop_04.jpg",
+      "sort_order": 3
+    }
+  ],
+  "challenges": [
+    {
+      "id": "enjoy_4_donuts",
+      "title": "Enjoy 4 donuts",
+      "goal": 4,
+      "points_reward": 100,
+      "artwork_type": "donut",
+      "sort_order": 0
+    },
+    {
+      "id": "try_4_coffees",
+      "title": "Try 4 coffees",
+      "goal": 4,
+      "points_reward": 100,
+      "artwork_type": "coffee",
+      "sort_order": 1
+    },
+    {
+      "id": "collect_12_treats",
+      "title": "Collect 12 treats",
+      "goal": 12,
+      "points_reward": 100,
+      "artwork_type": "donut",
+      "sort_order": 2
+    }
+  ],
+  "challenge_progress": [
+    {
+      "member_phone": "+95912345678",
+      "challenge_id": "enjoy_4_donuts",
+      "current": 4
+    },
+    {
+      "member_phone": "+95912345678",
+      "challenge_id": "try_4_coffees",
+      "current": 1
+    },
+    {
+      "member_phone": "+95912345678",
+      "challenge_id": "collect_12_treats",
+      "current": 9
+    }
+  ],
+  "gifts": [
+    {
+      "id": "donut_gift_box",
+      "title": "Donut Gift Box",
+      "points_cost": 25000,
+      "image": "asset:assets/images/gifts/donut_gift_box.jpg",
+      "sort_order": 0
+    },
+    {
+      "id": "coffee_gift_set",
+      "title": "Coffee Gift Set",
+      "points_cost": 35000,
+      "image": "asset:assets/images/gifts/coffee_gift_set.jpg",
+      "sort_order": 1
+    }
+  ]
+}

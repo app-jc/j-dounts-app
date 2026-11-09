@@ -152,4 +152,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rewardTab => 'Reward';
+
+  @override
+  String get seedFailureTitle => 'We couldn\'t prepare the app';
+
+  @override
+  String get seedFailureMessage =>
+      'Your app data couldn\'t be loaded. Please try again.';
+
+  @override
+  String get retry => 'Try again';
 }

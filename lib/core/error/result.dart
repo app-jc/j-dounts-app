@@ -5,6 +5,17 @@ part 'failures.dart';
 sealed class Result<T> extends Equatable {
   const Result();
 
+  Result<R> combineWith<U, R>(
+    Result<U> other,
+    R Function(T value, U otherValue) combine,
+  ) => fold(
+    onFailure: FailureResult<R>.new,
+    onSuccess: (value) => other.fold(
+      onFailure: FailureResult<R>.new,
+      onSuccess: (otherValue) => Success<R>(combine(value, otherValue)),
+    ),
+  );
+
   R fold<R>({
     required R Function(T value) onSuccess,
     required R Function(Failure failure) onFailure,

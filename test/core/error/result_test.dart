@@ -87,4 +87,25 @@ void main() {
     expect(success.fold(onSuccess: (value) => value, onFailure: (_) => -1), 7);
     expect(failure.fold(onSuccess: (value) => value, onFailure: (_) => -1), -1);
   });
+
+  test('combineWith transforms two successful results', () {
+    final combined = const Success<int>(2).combineWith(
+      const Success<String>(' donuts'),
+      (count, label) => '$count$label',
+    );
+
+    expect(combined, const Success<String>('2 donuts'));
+  });
+
+  test('combineWith preserves a failure without invoking the transform', () {
+    var transformed = false;
+    final combined = const FailureResult<int>(StorageFailure())
+        .combineWith(const Success<String>('unused'), (count, label) {
+          transformed = true;
+          return '$count$label';
+        });
+
+    expect(combined, const FailureResult<String>(StorageFailure()));
+    expect(transformed, isFalse);
+  });
 }
