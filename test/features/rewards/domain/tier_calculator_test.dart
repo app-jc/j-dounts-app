@@ -45,6 +45,25 @@ void main() {
       }
     });
 
+    test('clamps the in-tier fraction below the first threshold', () {
+      final result = _calculator().calculate(-1);
+      expect(result, isA<HasNextTier>());
+      expect(result.fraction, 0);
+    });
+
+    test('transitions at every seeded tier boundary', () {
+      for (final (points, tier) in [
+        (679000, 'Silver'),
+        (680500, 'Gold'),
+        (700000, 'Platinum'),
+      ]) {
+        expect(_calculator().calculate(points).currentTier.name, tier);
+      }
+      final top = _calculator().calculate(700000);
+      expect(top, isA<TopTier>());
+      expect(top.fraction, 1);
+    });
+
     test('returns top tier with full progress for a very large total', () {
       final result = _calculator().calculate(9000000000);
 

@@ -53,6 +53,12 @@ class _PhoneScreenState extends State<PhoneScreen> {
     builder: (context, state) {
       final localizations = AppLocalizations.of(context);
       final flow = context.read<AuthFlowCubit>().state.flow;
+      final VoidCallback? submit =
+          flow != null &&
+              state.isValid &&
+              state.status != PhoneStatus.submitting
+          ? () => context.read<PhoneCubit>().submit(flow)
+          : null;
       return AuthScaffold(
         title: localizations.phoneTitle,
         progressStep: 1,
@@ -61,15 +67,18 @@ class _PhoneScreenState extends State<PhoneScreen> {
           context.read<AuthFlowCubit>().reset();
           context.go(AppRoutes.onboarding);
         },
-        onContinue:
-            flow != null &&
-                state.isValid &&
-                state.status != PhoneStatus.submitting
-            ? () => context.read<PhoneCubit>().submit(flow)
-            : null,
+        onContinue: submit,
         isLoading: state.status == PhoneStatus.submitting,
         child: _PhoneField(
           controller: _controller,
+          onSubmitted: () {
+            final current = context.read<PhoneCubit>().state;
+            if (flow != null &&
+                current.isValid &&
+                current.status != PhoneStatus.submitting) {
+              context.read<PhoneCubit>().submit(flow);
+            }
+          },
           errorText: _errorText(localizations, state),
           onChanged: (value) {
             context.read<PhoneCubit>().updatePhone(value);
@@ -102,12 +111,14 @@ class _PhoneField extends StatelessWidget {
     required this.errorText,
     required this.onChanged,
     required this.onFocusChanged,
+    required this.onSubmitted,
   });
 
   final TextEditingController controller;
   final String? errorText;
   final ValueChanged<String> onChanged;
   final ValueChanged<bool> onFocusChanged;
+  final VoidCallback? onSubmitted;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -133,6 +144,7 @@ class _PhoneField extends StatelessWidget {
           textInputAction: TextInputAction.done,
           onChanged: onChanged,
           onFocusChanged: onFocusChanged,
+          onSubmitted: onSubmitted,
         ),
       ),
     ],

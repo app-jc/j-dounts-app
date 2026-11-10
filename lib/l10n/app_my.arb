@@ -109,7 +109,8 @@
   "@pointsRemainingToTier": {
     "placeholders": {
       "n": {
-        "type": "int"
+        "type": "int",
+        "format": "decimalPattern"
       },
       "tier": {
         "type": "String"
@@ -125,6 +126,13 @@
   "settingsTitle": "ဆက်တင်များ",
   "settings": "ဆက်တင်များ",
   "logOut": "ထွက်မည်",
+  "comingSoon": "မကြာမီလာမည်",
+  "menuPlaceholderTitle": "အရသာရှိတဲ့အရာလေးတစ်ခု လာတော့မယ်",
+  "menuPlaceholderMessage": "မီနူးအသစ်ကို ပြင်ဆင်နေပါတယ်။ မကြာမီ ပြန်လာကြည့်ပါ။",
+  "walletPlaceholderTitle": "သင့်ပိုက်ဆံအိတ်ကို ပြင်ဆင်နေပါတယ်",
+  "walletPlaceholderMessage": "သင့်ဆုလာဘ်များနှင့် ငွေပေးချေမှုရွေးချယ်စရာများကို ဤနေရာတွင် ပြသပါမည်။",
+  "settingsPlaceholderTitle": "အက်ပ်ကို စိတ်ကြိုက်ပြင်ဆင်ပါ",
+  "settingsPlaceholderMessage": "သင့်အကောင့်ဆက်တင်များကို မကြာမီ ဤနေရာတွင် ပြသပါမည်။",
   "homeSectionEmpty": "လောလောဆယ် ဘာမျှမရှိသေးပါ။",
   "homeSectionError": "ဤအပိုင်းကို မရရှိနိုင်သေးပါ။",
   "productNotFound": "ထုတ်ကုန်ကို မတွေ့ပါ။",

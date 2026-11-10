@@ -30,10 +30,13 @@ abstract final class Motion {
   static const Duration pointsRingSweep = long;
   static const Duration pointsCountUp = long;
   static const Duration ladderAppear = standard;
+  static const Duration ladderStagger = staggerStep;
   static const Duration ladderFill = long;
   static const Duration tabIndicator = standard;
   static const Duration tabListSwitch = short;
   static const Duration challengeStagger = short;
+  static const Duration challengeAppear = standard;
+  static const Duration challengeArtworkFill = long;
   static const Duration earnAttention = long;
   static const Duration badgePop = standard;
 }

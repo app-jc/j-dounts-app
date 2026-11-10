@@ -518,6 +518,48 @@ abstract class AppLocalizations {
   /// **'Log out'**
   String get logOut;
 
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get comingSoon;
+
+  /// No description provided for @menuPlaceholderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Something delicious is on the way'**
+  String get menuPlaceholderTitle;
+
+  /// No description provided for @menuPlaceholderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re baking up a fresh menu experience. Check back soon!'**
+  String get menuPlaceholderMessage;
+
+  /// No description provided for @walletPlaceholderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your wallet is getting ready'**
+  String get walletPlaceholderTitle;
+
+  /// No description provided for @walletPlaceholderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rewards and payment options will be right here.'**
+  String get walletPlaceholderMessage;
+
+  /// No description provided for @settingsPlaceholderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Make the app yours'**
+  String get settingsPlaceholderTitle;
+
+  /// No description provided for @settingsPlaceholderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account preferences will appear here soon.'**
+  String get settingsPlaceholderMessage;
+
   /// No description provided for @seedFailureTitle.
   ///
   /// In en, this message translates to:

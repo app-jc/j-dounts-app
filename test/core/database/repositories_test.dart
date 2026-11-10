@@ -140,6 +140,75 @@ void main() {
     expect(updatedRewards.challenges.first.current, 3);
     await updates.cancel();
   });
+
+  test('missing challenge progress defaults to zero per member', () async {
+    final secondId = await database
+        .into(database.members)
+        .insert(
+          MembersCompanion.insert(
+            phone: '+95976543210',
+            firstName: 'Another',
+            dateOfBirth: DateTime(1990),
+          ),
+        );
+    final repository = RewardsRepositoryImpl(
+      database,
+      MemberRepositoryImpl(database),
+    );
+    final seeded = _value(await repository.watchRewards(memberId).first);
+    final second = _value(await repository.watchRewards(secondId).first);
+
+    expect(seeded.challenges.map((challenge) => challenge.current), [4, 1, 9]);
+    expect(second.challenges, hasLength(seeded.challenges.length));
+    expect(
+      second.challenges.every((challenge) => challenge.current == 0),
+      isTrue,
+    );
+  });
+
+  test('challenge progress updates are isolated by member', () async {
+    final secondId = await database
+        .into(database.members)
+        .insert(
+          MembersCompanion.insert(
+            phone: '+95976543210',
+            firstName: 'Another',
+            dateOfBirth: DateTime(1990),
+          ),
+        );
+    const challengeId = 'enjoy_4_donuts';
+    await database
+        .into(database.memberChallengeProgress)
+        .insert(
+          MemberChallengeProgressCompanion.insert(
+            memberId: secondId,
+            challengeId: challengeId,
+            current: const Value(2),
+          ),
+        );
+    final repository = RewardsRepositoryImpl(
+      database,
+      MemberRepositoryImpl(database),
+    );
+    final firstUpdates = StreamIterator(repository.watchRewards(memberId));
+    final secondUpdates = StreamIterator(repository.watchRewards(secondId));
+    expect(await firstUpdates.moveNext(), isTrue);
+    expect(await secondUpdates.moveNext(), isTrue);
+
+    await (database.update(database.memberChallengeProgress)..where(
+          (row) =>
+              row.memberId.equals(secondId) &
+              row.challengeId.equals(challengeId),
+        ))
+        .write(const MemberChallengeProgressCompanion(current: Value(3)));
+    expect(await secondUpdates.moveNext(), isTrue);
+    final second = _value(secondUpdates.current);
+    final first = _value(await repository.watchRewards(memberId).first);
+    expect(second.challenges.first.current, 3);
+    expect(first.challenges.first.current, 4);
+    await firstUpdates.cancel();
+    await secondUpdates.cancel();
+  });
 }
 
 T _value<T>(Result<T> result) => switch (result) {

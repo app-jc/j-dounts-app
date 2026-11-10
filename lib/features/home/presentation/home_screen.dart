@@ -92,6 +92,7 @@ class _HomeContent extends StatelessWidget {
               SliverToBoxAdapter(
                 child: HomeMemberHeader(
                   member: data.member,
+                  progress: data.tierProgress,
                   onSettings: onSettings,
                 ),
               ),

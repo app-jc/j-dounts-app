@@ -109,7 +109,8 @@
   "@pointsRemainingToTier": {
     "placeholders": {
       "n": {
-        "type": "int"
+        "type": "int",
+        "format": "decimalPattern"
       },
       "tier": {
         "type": "String"
@@ -125,6 +126,13 @@
   "settingsTitle": "Settings",
   "settings": "Settings",
   "logOut": "Log out",
+  "comingSoon": "Coming soon",
+  "menuPlaceholderTitle": "Something delicious is on the way",
+  "menuPlaceholderMessage": "We're baking up a fresh menu experience. Check back soon!",
+  "walletPlaceholderTitle": "Your wallet is getting ready",
+  "walletPlaceholderMessage": "Your rewards and payment options will be right here.",
+  "settingsPlaceholderTitle": "Make the app yours",
+  "settingsPlaceholderMessage": "Your account preferences will appear here soon.",
   "seedFailureTitle": "We couldn't prepare the app",
   "seedFailureMessage": "Your app data couldn't be loaded. Please try again.",
   "retry": "Try again"

@@ -8,6 +8,7 @@ import 'package:j_dounts_app/app/router/app_routes.dart';
 import 'package:j_dounts_app/app/theme/app_colors.dart';
 import 'package:j_dounts_app/app/theme/app_spacing.dart';
 import 'package:j_dounts_app/app/theme/app_typography.dart';
+import 'package:j_dounts_app/features/auth/domain/validators/auth_validators.dart';
 import 'package:j_dounts_app/features/auth/presentation/dob/dob_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/flow/auth_flow_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/widgets/auth_scaffold.dart';
@@ -40,15 +41,15 @@ class DobScreen extends StatelessWidget {
                   ? localizations.month
                   : DateFormat.MMMM(locale)
                         .format(DateTime(2000, state.month!)),
-              onTap: () => _pickMonth(context, state.month),
+              onTap: () => _pickDate(context, state),
             ),
             _DateField(
               label: state.day?.toString() ?? localizations.day,
-              onTap: () => _pickDay(context, state.day),
+              onTap: () => _pickDate(context, state),
             ),
             _DateField(
               label: state.year?.toString() ?? localizations.year,
-              onTap: () => _pickYear(context, state.year),
+              onTap: () => _pickDate(context, state),
             ),
             if (state.failure != null)
               Padding(
@@ -71,63 +72,69 @@ class DobScreen extends StatelessWidget {
     context.go(AppRoutes.welcome, extra: identity.memberId);
   }
 
-  Future<void> _pickMonth(BuildContext context, int? selected) async {
-    final value = await _pick(context, 12, selected ?? 1);
-    if (value != null && context.mounted) {
-      context.read<DobCubit>().select(month: value);
-      context.read<AuthFlowCubit>().updateRawDateOfBirth(
-        month: value.toString(),
-      );
-    }
-  }
-
-  Future<void> _pickDay(BuildContext context, int? selected) async {
-    final value = await _pick(context, 31, selected ?? 1);
-    if (value != null && context.mounted) {
-      context.read<DobCubit>().select(day: value);
-      context.read<AuthFlowCubit>().updateRawDateOfBirth(day: value.toString());
-    }
-  }
-
-  Future<void> _pickYear(BuildContext context, int? selected) async {
-    final currentYear = DateTime.now().year;
-    final value = await _pick(
-      context,
-      120,
-      selected ?? currentYear - 13,
-      offset: currentYear - 119,
-    );
-    if (value != null && context.mounted) {
-      context.read<DobCubit>().select(year: value);
-      context.read<AuthFlowCubit>().updateRawDateOfBirth(
-        year: value.toString(),
-      );
-    }
-  }
-
-  Future<int?> _pick(
-    BuildContext context,
-    int count,
-    int selected, {
-    int offset = 1,
-  }) => showModalBottomSheet<int>(
-    context: context,
-    builder: (context) => SizedBox(
-      height: 240,
-      child: CupertinoPicker(
-        itemExtent: 44,
-        scrollController: FixedExtentScrollController(
-          initialItem: (selected - offset).clamp(0, count - 1),
+  Future<void> _pickDate(BuildContext context, DobState state) async {
+    final today = context.read<DobCubit>().today;
+    final existing = state.date;
+    final initial =
+        existing != null &&
+            existing.year == state.year &&
+            existing.month == state.month &&
+            existing.day == state.day &&
+            existing.year >= today.year - 119 &&
+            existing.year <= today.year
+        ? existing
+        : DateTime(today.year - minimumAge);
+    var selected = initial;
+    final date = await showModalBottomSheet<DateTime>(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(sheetContext),
+                  child: Text(
+                    MaterialLocalizations.of(sheetContext).cancelButtonLabel,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(sheetContext, selected),
+                  child: Text(
+                    MaterialLocalizations.of(sheetContext).okButtonLabel,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 240,
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                dateOrder: DatePickerDateOrder.mdy,
+                initialDateTime: initial,
+                minimumYear: today.year - 119,
+                maximumYear: today.year,
+                onDateTimeChanged: (date) => selected = date,
+              ),
+            ),
+          ],
         ),
-        onSelectedItemChanged: (index) =>
-            Navigator.of(context).pop(index + offset),
-        children: [
-          for (var index = 0; index < count; index++)
-            Center(child: Text('${index + offset}')),
-        ],
       ),
-    ),
-  );
+    );
+    if (date == null || !context.mounted) return;
+    context.read<DobCubit>().select(
+      year: date.year,
+      month: date.month,
+      day: date.day,
+    );
+    context.read<AuthFlowCubit>().updateRawDateOfBirth(
+      year: date.year.toString(),
+      month: date.month.toString(),
+      day: date.day.toString(),
+    );
+  }
 }
 
 class _DateField extends StatelessWidget {

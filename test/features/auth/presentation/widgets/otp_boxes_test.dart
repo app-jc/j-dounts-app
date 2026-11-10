@@ -23,4 +23,29 @@ void main() {
     await tester.enterText(find.byType(TextField), '123456');
     expect(value, '123456');
   });
+
+  testWidgets('Done dismisses OTP focus and invokes submit', (tester) async {
+    var submitted = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 320,
+            child: OtpBoxes(
+              value: '',
+              onChanged: (_) {},
+              onSubmitted: () => submitted++,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    final focus = tester.widget<TextField>(find.byType(TextField)).focusNode!;
+    expect(focus.hasFocus, isTrue);
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    expect(focus.hasFocus, isFalse);
+    expect(submitted, 1);
+  });
 }

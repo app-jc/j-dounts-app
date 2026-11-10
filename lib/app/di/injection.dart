@@ -24,6 +24,7 @@ import 'package:j_dounts_app/features/product/domain/product_repository.dart';
 import 'package:j_dounts_app/features/product/presentation/product_cubit.dart';
 import 'package:j_dounts_app/features/rewards/data/rewards_repository_impl.dart';
 import 'package:j_dounts_app/features/rewards/domain/rewards_repository.dart';
+import 'package:j_dounts_app/features/rewards/presentation/rewards_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -85,6 +86,10 @@ void configureDependencies() {
   );
   getIt.registerFactoryParam<HomeBloc, int, void>(
     (memberId, _) => HomeBloc(getIt<HomeRepository>(), memberId: memberId),
+  );
+  getIt.registerFactoryParam<RewardsCubit, int, void>(
+    (memberId, _) =>
+        RewardsCubit(getIt<RewardsRepository>(), memberId: memberId),
   );
   getIt.registerFactoryParam<
     DobCubit,

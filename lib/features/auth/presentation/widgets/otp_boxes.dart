@@ -10,12 +10,14 @@ class OtpBoxes extends StatefulWidget {
     required this.value,
     required this.onChanged,
     this.shakeToken = 0,
+    this.onSubmitted,
     super.key,
   });
 
   final String value;
   final ValueChanged<String> onChanged;
   final int shakeToken;
+  final VoidCallback? onSubmitted;
 
   @override
   State<OtpBoxes> createState() => _OtpBoxesState();
@@ -85,6 +87,9 @@ class _OtpBoxesState extends State<OtpBoxes>
                   focusNode: _focusNode,
                   autofocus: true,
                   keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  onEditingComplete: _focusNode.unfocus,
+                  onSubmitted: (_) => widget.onSubmitted?.call(),
                   autofillHints: const [AutofillHints.oneTimeCode],
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,

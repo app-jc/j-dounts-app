@@ -39,6 +39,9 @@ class OtpScreen extends StatelessWidget {
     builder: (context, state) {
       final localizations = AppLocalizations.of(context);
       final phone = context.read<AuthFlowCubit>().state.draft.phone;
+      final VoidCallback? submit = state.canSubmit
+          ? context.read<OtpCubit>().verify
+          : null;
       return Stack(
         children: [
           AuthScaffold(
@@ -47,9 +50,7 @@ class OtpScreen extends StatelessWidget {
             progressLabel: localizations.otpTitle,
             onBack: () =>
                 context.canPop() ? context.pop() : context.go(AppRoutes.phone),
-            onContinue: state.canSubmit
-                ? context.read<OtpCubit>().verify
-                : null,
+            onContinue: submit,
             isLoading: state.status == OtpStatus.verifying,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,11 +61,18 @@ class OtpScreen extends StatelessWidget {
                   value: state.code,
                   shakeToken: state.shakeToken,
                   onChanged: context.read<OtpCubit>().updateCode,
+                  onSubmitted: () {
+                    final cubit = context.read<OtpCubit>();
+                    if (cubit.state.canSubmit) cubit.verify();
+                  },
                 ),
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: state.remaining == Duration.zero
-                      ? context.read<OtpCubit>().resend
+                      ? () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          context.read<OtpCubit>().resend();
+                        }
                       : null,
                   child: Text(
                     state.remaining == Duration.zero

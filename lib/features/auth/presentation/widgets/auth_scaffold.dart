@@ -100,7 +100,10 @@ class _AuthHeader extends StatelessWidget {
         const SizedBox.square(dimension: AppSpacing.backButtonSize)
       else
         IconButton(
-          onPressed: onBack,
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            onBack!();
+          },
           style: IconButton.styleFrom(
             backgroundColor: AppColors.surfaceCard,
             fixedSize: const Size.square(AppSpacing.backButtonSize),
@@ -171,7 +174,12 @@ class _AuthActions extends StatelessWidget {
       children: [
         PrimaryButton(
           label: localizations.continueLabel,
-          onPressed: onContinue,
+          onPressed: onContinue == null
+              ? null
+              : () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  onContinue!();
+                },
           isLoading: isLoading,
         ),
         const SizedBox(height: AppSpacing.sm),

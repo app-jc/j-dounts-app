@@ -87,11 +87,40 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(SettingsScreen), findsOneWidget);
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Log out')),
+      findsOneWidget,
+    );
+    expect(find.text('Make the app yours'), findsOneWidget);
     await tester.tap(find.text('Log out'));
     await tester.pumpAndSettle();
 
     expect(find.byType(OnboardingScreen), findsOneWidget);
     expect(session.isAuthenticated, isFalse);
+  });
+
+  testWidgets('authenticated Menu shows its coming-soon placeholder', (
+    tester,
+  ) async {
+    await session.startSession(42);
+    harness.createRouter(initialLocation: AppRoutes.menu);
+    await tester.pumpWidget(_localizedApp(harness.router));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Something delicious is on the way'), findsOneWidget);
+    expect(find.text('Coming soon'), findsOneWidget);
+  });
+
+  testWidgets('authenticated Wallet shows its coming-soon placeholder', (
+    tester,
+  ) async {
+    await session.startSession(42);
+    harness.createRouter(initialLocation: AppRoutes.wallet);
+    await tester.pumpWidget(_localizedApp(harness.router));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Your wallet is getting ready'), findsOneWidget);
+    expect(find.text('Coming soon'), findsOneWidget);
   });
 
   testWidgets('authenticated Home exposes Settings navigation', (tester) async {

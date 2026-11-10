@@ -208,7 +208,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String pointsRemainingToTier(int n, String tier) {
-    return '$n pts Remaining to become $tier';
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    return '$nString pts Remaining to become $tier';
   }
 
   @override
@@ -237,6 +242,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logOut => 'Log out';
+
+  @override
+  String get comingSoon => 'Coming soon';
+
+  @override
+  String get menuPlaceholderTitle => 'Something delicious is on the way';
+
+  @override
+  String get menuPlaceholderMessage =>
+      'We\'re baking up a fresh menu experience. Check back soon!';
+
+  @override
+  String get walletPlaceholderTitle => 'Your wallet is getting ready';
+
+  @override
+  String get walletPlaceholderMessage =>
+      'Your rewards and payment options will be right here.';
+
+  @override
+  String get settingsPlaceholderTitle => 'Make the app yours';
+
+  @override
+  String get settingsPlaceholderMessage =>
+      'Your account preferences will appear here soon.';
 
   @override
   String get seedFailureTitle => 'We couldn\'t prepare the app';

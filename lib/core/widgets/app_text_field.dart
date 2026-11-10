@@ -18,6 +18,7 @@ class AppTextField extends StatefulWidget {
     this.inputFormatters,
     this.onChanged,
     this.onFocusChanged,
+    this.onSubmitted,
     this.enabled = true,
     super.key,
   });
@@ -31,6 +32,7 @@ class AppTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final ValueChanged<String>? onChanged;
   final ValueChanged<bool>? onFocusChanged;
+  final VoidCallback? onSubmitted;
   final bool enabled;
 
   @override
@@ -90,6 +92,8 @@ class _AppTextFieldState extends State<AppTextField> {
             textCapitalization: widget.textCapitalization,
             inputFormatters: widget.inputFormatters,
             onChanged: widget.onChanged,
+            onEditingComplete: _focusNode.unfocus,
+            onSubmitted: (_) => widget.onSubmitted?.call(),
             style: AppTypography.fieldText,
             decoration: InputDecoration(
               hintText: widget.hintText,

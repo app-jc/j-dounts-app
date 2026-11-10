@@ -34,4 +34,28 @@ void main() {
     expect(find.text('Enter a first name'), findsOneWidget);
     expect(find.byType(AppTextField), findsOneWidget);
   });
+
+  testWidgets('Done dismisses focus and invokes submit', (tester) async {
+    var submitted = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AppTextField(
+            controller: controller,
+            hintText: 'Name',
+            textInputAction: TextInputAction.done,
+            onSubmitted: () => submitted++,
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TextField));
+    await tester.pump();
+    final focus = tester.widget<TextField>(find.byType(TextField)).focusNode!;
+    expect(focus.hasFocus, isTrue);
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    expect(focus.hasFocus, isFalse);
+    expect(submitted, 1);
+  });
 }

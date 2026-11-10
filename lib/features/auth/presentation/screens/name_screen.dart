@@ -40,24 +40,29 @@ class _NameScreenState extends State<NameScreen> {
   Widget build(BuildContext context) => BlocBuilder<NameCubit, NameState>(
     builder: (context, state) {
       final localizations = AppLocalizations.of(context);
+      void submit() {
+        final current = context.read<NameCubit>().state;
+        if (!current.isValid) {
+          context.read<NameCubit>().validate();
+          return;
+        }
+        context.read<AuthFlowCubit>().updateName(
+          firstName: current.firstName.trim(),
+          lastName: current.lastName.trim().isEmpty
+              ? null
+              : current.lastName.trim(),
+        );
+        context.read<AuthFlowCubit>().setStep(AuthFlowStep.dateOfBirth);
+        context.push(AppRoutes.dateOfBirth);
+      }
+
       return AuthScaffold(
         title: localizations.nameTitle,
         progressStep: 3,
         progressLabel: localizations.nameTitle,
         onBack: () =>
             context.canPop() ? context.pop() : context.go(AppRoutes.phone),
-        onContinue: state.isValid
-            ? () {
-                context.read<AuthFlowCubit>().updateName(
-                  firstName: state.firstName.trim(),
-                  lastName: state.lastName.trim().isEmpty
-                      ? null
-                      : state.lastName.trim(),
-                );
-                context.read<AuthFlowCubit>().setStep(AuthFlowStep.dateOfBirth);
-                context.push(AppRoutes.dateOfBirth);
-              }
-            : () => context.read<NameCubit>().validate(),
+        onContinue: submit,
         child: Column(
           children: [
             AppTextField(
@@ -70,6 +75,8 @@ class _NameScreenState extends State<NameScreen> {
                 required: true,
               ),
               textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.done,
+              onSubmitted: submit,
               onChanged: context.read<NameCubit>().updateFirstName,
               onFocusChanged: (focused) {
                 if (!focused) context.read<NameCubit>().markBlurred();
@@ -86,6 +93,8 @@ class _NameScreenState extends State<NameScreen> {
                 required: false,
               ),
               textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.done,
+              onSubmitted: submit,
               onChanged: context.read<NameCubit>().updateLastName,
             ),
           ],

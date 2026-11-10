@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:j_dounts_app/app/di/injection.dart';
 import 'package:j_dounts_app/app/router/app_routes.dart';
 import 'package:j_dounts_app/app/router/app_redirect.dart';
+import 'package:j_dounts_app/app/router/rewards_route.dart';
 import 'package:j_dounts_app/app/router/step_page.dart';
+import 'package:j_dounts_app/app/theme/app_colors.dart';
 import 'package:j_dounts_app/features/auth/presentation/flow/auth_flow_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/screens/onboarding_screen.dart';
 import 'package:j_dounts_app/features/auth/presentation/screens/phone_screen.dart';
@@ -227,9 +229,7 @@ GoRouter createAppRouter({
                 path: AppRoutes.rewards,
                 pageBuilder: (context, state) => stepPage(
                   key: state.pageKey,
-                  child: PlaceholderScreen(
-                    title: AppLocalizations.of(context).rewards,
-                  ),
+                  child: rewardsRoute(context, sessionNotifier.memberId!),
                 ),
               ),
             ],
@@ -240,8 +240,13 @@ GoRouter createAppRouter({
                 path: AppRoutes.menu,
                 pageBuilder: (context, state) => stepPage(
                   key: state.pageKey,
-                  child: PlaceholderScreen(
+                  child: FeaturePlaceholderScreen(
                     title: AppLocalizations.of(context).menuTab,
+                    headline: AppLocalizations.of(context).menuPlaceholderTitle,
+                    message: AppLocalizations.of(context)
+                        .menuPlaceholderMessage,
+                    icon: Icons.donut_large_rounded,
+                    accentColor: AppColors.brandPink,
                   ),
                 ),
               ),
@@ -253,8 +258,14 @@ GoRouter createAppRouter({
                 path: AppRoutes.wallet,
                 pageBuilder: (context, state) => stepPage(
                   key: state.pageKey,
-                  child: PlaceholderScreen(
+                  child: FeaturePlaceholderScreen(
                     title: AppLocalizations.of(context).walletTab,
+                    headline: AppLocalizations.of(context)
+                        .walletPlaceholderTitle,
+                    message: AppLocalizations.of(context)
+                        .walletPlaceholderMessage,
+                    icon: Icons.account_balance_wallet_rounded,
+                    accentColor: AppColors.bannerPurple,
                   ),
                 ),
               ),

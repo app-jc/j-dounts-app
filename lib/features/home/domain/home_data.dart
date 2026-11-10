@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:j_dounts_app/core/member/domain/member.dart';
+import 'package:j_dounts_app/core/member/domain/tier_calculator.dart';
 
 final class HomeData extends Equatable {
   HomeData({
@@ -8,17 +9,24 @@ final class HomeData extends Equatable {
     required List<HomeBanner> banners,
     required List<HomeSection> sections,
     required List<HomeShop> shops,
+    List<TierDefinition> tiers = const [],
   }) : banners = List.unmodifiable(banners),
        sections = List.unmodifiable(sections),
-       shops = List.unmodifiable(shops);
+       shops = List.unmodifiable(shops),
+       tiers = List.unmodifiable(tiers);
 
   final Member? member;
   final List<HomeBanner> banners;
   final List<HomeSection> sections;
   final List<HomeShop> shops;
+  final List<TierDefinition> tiers;
+
+  TierProgress? get tierProgress => member == null || tiers.isEmpty
+      ? null
+      : TierCalculator(tiers).calculate(member!.totalPoints);
 
   @override
-  List<Object?> get props => [member, banners, sections, shops];
+  List<Object?> get props => [member, banners, sections, shops, tiers];
 }
 
 final class HomeBanner extends Equatable {

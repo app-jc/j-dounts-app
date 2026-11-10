@@ -4,19 +4,27 @@ import 'package:j_dounts_app/app/theme/app_colors.dart';
 import 'package:j_dounts_app/app/theme/app_spacing.dart';
 import 'package:j_dounts_app/core/images/app_cached_image.dart';
 import 'package:j_dounts_app/core/member/domain/member.dart';
-import 'package:j_dounts_app/core/utils/formatters.dart';
+import 'package:j_dounts_app/core/member/domain/tier_calculator.dart';
+import 'package:j_dounts_app/core/member/presentation/points_to_next.dart';
 import 'package:j_dounts_app/features/home/domain/home_data.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 
 class HomeMemberHeader extends StatelessWidget {
-  const HomeMemberHeader({required this.member, this.onSettings, super.key});
+  const HomeMemberHeader({
+    required this.member,
+    required this.progress,
+    this.onSettings,
+    super.key,
+  });
 
   final Member? member;
+  final TierProgress? progress;
   final VoidCallback? onSettings;
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+    final progress = this.progress;
     return Container(
       color: AppColors.surfaceHome,
       padding: const EdgeInsets.fromLTRB(
@@ -55,7 +63,9 @@ class HomeMemberHeader extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(
-                      formatMmk(member?.totalPoints ?? 0),
+                      progress == null
+                          ? localizations.homeSectionError
+                          : localizations.tierMember(progress.currentTier.name),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
@@ -95,7 +105,9 @@ class HomeMemberHeader extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    formatMmk(member?.totalPoints ?? 0),
+                    progress == null
+                        ? localizations.homeSectionError
+                        : pointsToNextText(localizations, progress),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),

@@ -70,6 +70,8 @@ final class DobCubit extends Cubit<DobState> {
   final Clock _clock;
   bool _isSubmitting = false;
 
+  DateTime get today => _clock.now();
+
   void select({int? year, int? month, int? day}) => emit(
     state.copyWith(
       year: year,

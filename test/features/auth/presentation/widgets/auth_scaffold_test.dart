@@ -34,4 +34,38 @@ void main() {
 
     expect(continueCount, 1);
   });
+
+  testWidgets('Continue and Back dismiss focus and invoke callbacks', (
+    tester,
+  ) async {
+    final focus = FocusNode();
+    addTearDown(focus.dispose);
+    var actions = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: AuthScaffold(
+          title: 'Title',
+          progressStep: 1,
+          progressLabel: 'Step',
+          onContinue: () => actions++,
+          onBack: () => actions++,
+          child: TextField(focusNode: focus),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TextField));
+    await tester.pump();
+    expect(focus.hasFocus, isTrue);
+    await tester.tap(find.text('CONTINUE'));
+    await tester.pump();
+    expect(focus.hasFocus, isFalse);
+    await tester.tap(find.byType(TextField));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pump();
+    expect(focus.hasFocus, isFalse);
+    expect(actions, 2);
+  });
 }

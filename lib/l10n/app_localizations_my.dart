@@ -209,7 +209,12 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String pointsRemainingToTier(int n, String tier) {
-    return '$tier ဖြစ်ရန် ပွိုင့် $n ကျန်ပါသည်';
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    return '$tier ဖြစ်ရန် ပွိုင့် $nString ကျန်ပါသည်';
   }
 
   @override
@@ -238,6 +243,30 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get logOut => 'ထွက်မည်';
+
+  @override
+  String get comingSoon => 'မကြာမီလာမည်';
+
+  @override
+  String get menuPlaceholderTitle => 'အရသာရှိတဲ့အရာလေးတစ်ခု လာတော့မယ်';
+
+  @override
+  String get menuPlaceholderMessage =>
+      'မီနူးအသစ်ကို ပြင်ဆင်နေပါတယ်။ မကြာမီ ပြန်လာကြည့်ပါ။';
+
+  @override
+  String get walletPlaceholderTitle => 'သင့်ပိုက်ဆံအိတ်ကို ပြင်ဆင်နေပါတယ်';
+
+  @override
+  String get walletPlaceholderMessage =>
+      'သင့်ဆုလာဘ်များနှင့် ငွေပေးချေမှုရွေးချယ်စရာများကို ဤနေရာတွင် ပြသပါမည်။';
+
+  @override
+  String get settingsPlaceholderTitle => 'အက်ပ်ကို စိတ်ကြိုက်ပြင်ဆင်ပါ';
+
+  @override
+  String get settingsPlaceholderMessage =>
+      'သင့်အကောင့်ဆက်တင်များကို မကြာမီ ဤနေရာတွင် ပြသပါမည်။';
 
   @override
   String get seedFailureTitle => 'We couldn\'t prepare the app';

@@ -48,15 +48,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     );
   }
 
-  HomeLoaded _loaded(HomeData data) => HomeLoaded(
-    data: data,
-    sectionStates: {
-      for (final section in data.sections)
-        section.id: section.products.isEmpty
-            ? HomeSectionEmpty(section)
-            : HomeSectionLoaded(section),
-    },
-  );
+  HomeState _loaded(HomeData data) {
+    try {
+      data.tierProgress;
+      return HomeLoaded(
+        data: data,
+        sectionStates: {
+          for (final section in data.sections)
+            section.id: section.products.isEmpty
+                ? HomeSectionEmpty(section)
+                : HomeSectionLoaded(section),
+        },
+      );
+    } on ArgumentError catch (error, stackTrace) {
+      addError(error, stackTrace);
+      return HomeFailure(UnexpectedFailure(cause: error), previous: _previous);
+    }
+  }
 
   void _onRefresh(HomeRefreshRequested event, Emitter<HomeState> emit) {}
 }

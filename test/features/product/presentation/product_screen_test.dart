@@ -22,28 +22,22 @@ const _coconut = Product(
 );
 
 void main() {
-  late StreamController<Result<Product?>> controller;
-  late ProductCubit cubit;
-
-  setUp(() {
-    controller = StreamController<Result<Product?>>.broadcast();
-    cubit = ProductCubit(
-      _FakeProductRepository(controller.stream),
-      code: _coconut.code,
-    );
-  });
-
-  tearDown(() async {
-    await cubit.close();
-    await controller.close();
-  });
-
   testWidgets('shows New badge, live total, and add-to-cart feedback', (
     tester,
   ) async {
-    controller.add(const Success(_coconut));
-    await pumpEventQueue();
+    final controller = StreamController<Result<Product?>>.broadcast();
+    final cubit = ProductCubit(
+      _FakeProductRepository(controller.stream),
+      code: _coconut.code,
+    );
+    addTearDown(() async {
+      await cubit.close();
+      await controller.close();
+    });
     await tester.pumpWidget(_app(cubit));
+    controller.add(const Success(_coconut));
+    await tester.pump();
+    await tester.pump();
 
     expect(find.text('New'), findsOneWidget);
     expect(find.text('3,200 MMK'), findsAtLeastNWidgets(1));
@@ -51,19 +45,30 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
+    expect(cubit.state.quantity, 2);
+    expect(find.textContaining('6,400 MMK'), findsOneWidget);
     await tester.tap(find.textContaining('ADD TO CART'));
     await tester.pump();
 
-    expect(cubit.state.quantity, 2);
-    expect(find.textContaining('6,400 MMK'), findsOneWidget);
     expect(cubit.state.addedToCart, isTrue);
     expect(find.text('ADDED TO CART'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('shows a not-found state for a missing product', (tester) async {
-    controller.add(const Success(null));
-    await pumpEventQueue();
+    final controller = StreamController<Result<Product?>>.broadcast();
+    final cubit = ProductCubit(
+      _FakeProductRepository(controller.stream),
+      code: _coconut.code,
+    );
+    addTearDown(() async {
+      await cubit.close();
+      await controller.close();
+    });
     await tester.pumpWidget(_app(cubit));
+    controller.add(const Success(null));
+    await tester.pump();
+    await tester.pump();
 
     expect(find.textContaining('Product not found'), findsOneWidget);
   });
