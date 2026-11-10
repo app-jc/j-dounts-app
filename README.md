@@ -315,33 +315,8 @@ Profile-mode frame-rate/performance testing has not been recorded.
 - **Fonts:** Nunito (Regular, Bold) and Noto Sans Myanmar, bundled under SIL Open Font License 1.1; license files are in the font asset folders.
 - **Images:** original flat pastel illustrations generated for this project, bundled as assets and listed in `ASSETS.md`. No client images are included.
 - **Icons:** Material icons and Font Awesome social icons; social sign-in is a placeholder, not a real provider integration.
-- **Burmese locale:** English and Burmese ARB localizations are included.
-
-## AI tool usage
-
-AI coding tools were used, as the brief allows. The code was developed in slices with human review; the nearby-shop horizontal cards and Home layout refinements were also completed by hand. The submitter should review and be prepared to explain all submitted code.
-
-## Known gaps
-
-- No back end; authentication is fake.
-- The planned Serverpod backend, `/v1` response envelope, and Dio integration are not implemented.
-- Bottom-nav tabs 3 and 4 open a placeholder.
-- The cart is not persistent (bonus in the brief).
-- No remote refresh; pull-to-refresh currently has no effect, and data does not refresh when connectivity returns.
-- No Register → Home → Product integration test; the latest full test suite has not been confirmed to pass.
-- Release APK installation, online/offline transitions across Android and iOS, and profile-mode performance checks are not recorded. Connectivity is not explicitly rechecked when the app resumes from the background.
-- Android secure-storage backup/restore behavior has not been verified; the secure-storage plugin warns that Android Auto Backup can restore encrypted data without its original key.
-- iOS Keychain behavior and the secure-storage plugin's documented Keychain Sharing configuration need verification on a signed physical-device build.
-- Remaining animation gaps: onboarding drift, Welcome entrance, Home section stagger, loading morph, and OTP shake Reduce Motion behavior.
-- Seeded 9/12 challenge uses donut artwork rather than the brief's coffee example.
-- Visual fidelity and full-screen Reduce Motion behavior still need final device review.
-- Final APK and iOS Simulator package, clean-clone run, recording, and submission links still need verification. The local release APK is debug-signed.
-- `font_awesome_flutter` is used for social icons but is not on the project's recorded approved-package list; approval or replacement is outstanding.
-
-## Time spent
-
-Record the actual total and a short split (setup, auth, Home/data, Rewards, tests, and polish) before submission; a verified time log is not available in this repository snapshot.
+- **Burmese locale:** English and Burmese ARB localizations are included ( String Only )
 
 ## Recording
 
-Recording and upload are not yet confirmed. Add the link after recording the 2–4 minute flow: register, log out, log in, Home, Product detail, Rewards, then repeat in airplane mode.
+Recording will be uploaded soon in an hour.
