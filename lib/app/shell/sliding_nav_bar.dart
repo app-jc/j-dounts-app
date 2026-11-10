@@ -7,6 +7,7 @@ import 'package:j_dounts_app/core/motion/motion.dart';
 import 'package:j_dounts_app/core/motion/reduce_motion.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 
+/// A widget that displays a sliding navigation bar with animated transitions between destinations.
 class SlidingNavBar extends StatelessWidget {
   const SlidingNavBar({
     required this.currentIndex,
@@ -32,7 +33,7 @@ class SlidingNavBar extends StatelessWidget {
         route: AppRoutes.rewards,
       ),
       _NavDestinationData(
-        icon: Icons.circle_outlined,
+        icon: Icons.menu_open,
         label: localizations.menuTab,
         route: AppRoutes.menu,
       ),
@@ -52,22 +53,12 @@ class SlidingNavBar extends StatelessWidget {
         : currentIndex >= destinations.length
         ? destinations.length - 1
         : currentIndex;
-    final reduceMotion = ReduceMotion.isReduced(context);
-
     return DecoratedBox(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.actionBlue,
-        border: Border.all(color: AppColors.surfaceCard),
-        borderRadius: const BorderRadius.vertical(
+        borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppSpacing.navBarTopRadius),
         ),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.scrim,
-            blurRadius: AppSpacing.shadowBlurRadius,
-            offset: Offset(0, -AppSpacing.shadowOffsetY),
-          ),
-        ],
       ),
       child: SafeArea(
         top: false,
@@ -76,40 +67,28 @@ class SlidingNavBar extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final itemWidth = constraints.maxWidth / destinations.length;
-              final pillWidth = AppSpacing.primaryButtonHeight * 2;
-              final pillLeft =
-                  itemWidth * safeIndex + (itemWidth - pillWidth) / 2;
-              return Stack(
-                alignment: Alignment.center,
+              final selectedWidth = itemWidth * 1.8;
+              final unselectedWidth =
+                  (constraints.maxWidth - selectedWidth) /
+                  (destinations.length - 1);
+              return Row(
                 children: [
-                  Row(
-                    children: [
-                      for (var index = 0; index < destinations.length; index++)
-                        Expanded(
-                          child: _NavItem(
-                            data: destinations[index],
-                            selected: index == safeIndex,
-                            onTap: () => onDestinationSelected(index),
-                          ),
-                        ),
-                    ],
-                  ),
-                  AnimatedPositioned(
-                    duration: ReduceMotion.resolve(
-                      context,
-                      Motion.navPillSlide,
+                  for (var index = 0; index < destinations.length; index++)
+                    AnimatedContainer(
+                      duration: ReduceMotion.resolve(
+                        context,
+                        Motion.navPillSlide,
+                      ),
+                      curve: Motion.emphasizedCurve,
+                      width: index == safeIndex
+                          ? selectedWidth
+                          : unselectedWidth,
+                      child: _NavItem(
+                        data: destinations[index],
+                        selected: index == safeIndex,
+                        onTap: () => onDestinationSelected(index),
+                      ),
                     ),
-                    curve: Motion.emphasizedCurve,
-                    left: pillLeft,
-                    width: pillWidth,
-                    top: AppSpacing.sm,
-                    bottom: AppSpacing.sm,
-                    child: _ActivePill(
-                      data: destinations[safeIndex],
-                      reduceMotion: reduceMotion,
-                      onTap: () => onDestinationSelected(safeIndex),
-                    ),
-                  ),
                 ],
               );
             },
@@ -120,6 +99,7 @@ class SlidingNavBar extends StatelessWidget {
   }
 }
 
+/// A class that represents the data for a navigation destination in the sliding navigation bar.
 class _NavDestinationData {
   const _NavDestinationData({
     required this.icon,
@@ -157,81 +137,44 @@ class _NavItem extends StatelessWidget {
         child: SizedBox(
           height: AppSpacing.primaryButtonHeight,
           child: Center(
-            child: selected
-                ? const SizedBox(
-                    width: AppSpacing.md + AppSpacing.sm,
-                    height: AppSpacing.md + AppSpacing.sm,
-                  )
-                : Icon(
-                    data.icon,
-                    size: AppSpacing.md + AppSpacing.sm,
-                    color: AppColors.surfaceCard,
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ActivePill extends StatelessWidget {
-  const _ActivePill({
-    required this.data,
-    required this.reduceMotion,
-    required this.onTap,
-  });
-
-  final _NavDestinationData data;
-  final bool reduceMotion;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      selected: true,
-      label: data.label,
-      hint: data.route,
-      child: InkResponse(
-        onTap: onTap,
-        containedInkWell: true,
-        radius: AppSpacing.primaryButtonHeight / 2,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: AppColors.brandPink,
-            border: Border.all(color: AppColors.surfaceCard),
-            borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
-          ),
-          child: Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    data.icon,
-                    size: AppSpacing.md + AppSpacing.sm,
-                    color: AppColors.surfaceCard,
-                  ),
-                  AnimatedSwitcher(
-                    duration: reduceMotion
-                        ? Duration.zero
-                        : Motion.navPillSlide,
-                    child: Padding(
-                      key: ValueKey(data.label),
-                      padding: const EdgeInsets.only(left: AppSpacing.xs),
-                      child: Text(
-                        data.label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: AppColors.surfaceCard,
-                          fontWeight: FontWeight.w700,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: selected ? AppColors.brandPink : null,
+                border: selected
+                    ? Border.all(color: AppColors.surfaceCard)
+                    : null,
+                borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.md,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      data.icon,
+                      size: AppSpacing.md + AppSpacing.sm,
+                      color: AppColors.surfaceCard,
+                    ),
+                    if (selected) ...[
+                      const SizedBox(width: AppSpacing.xs),
+                      Flexible(
+                        child: Text(
+                          data.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(
+                                color: AppColors.surfaceCard,
+                                fontWeight: FontWeight.w700,
+                              ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
+                    ],
+                  ],
+                ),
               ),
             ),
           ),

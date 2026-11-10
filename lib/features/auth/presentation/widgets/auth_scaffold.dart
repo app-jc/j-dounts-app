@@ -7,6 +7,7 @@ import 'package:j_dounts_app/core/widgets/primary_button.dart';
 import 'package:j_dounts_app/features/auth/presentation/widgets/progress_ring.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 
+/// A scaffold widget for authentication screens, providing a consistent layout with a header, content area, and action buttons.
 class AuthScaffold extends StatelessWidget {
   const AuthScaffold({
     required this.title,

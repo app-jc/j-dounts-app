@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:j_dounts_app/app/di/injection.dart';
 import 'package:j_dounts_app/app/router/app_routes.dart';
+import 'package:j_dounts_app/app/router/app_redirect.dart';
 import 'package:j_dounts_app/app/router/step_page.dart';
 import 'package:j_dounts_app/features/auth/presentation/flow/auth_flow_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/screens/onboarding_screen.dart';
@@ -20,13 +21,17 @@ import 'package:j_dounts_app/features/auth/presentation/phone/phone_cubit.dart';
 import 'package:j_dounts_app/features/auth/presentation/session/session_notifier.dart';
 import 'package:j_dounts_app/features/settings/presentation/settings_screen.dart';
 import 'package:j_dounts_app/features/home/presentation/home_screen.dart';
+import 'package:j_dounts_app/features/home/presentation/home_bloc.dart';
 import 'package:j_dounts_app/features/home/domain/home_repository.dart';
 import 'package:j_dounts_app/features/product/domain/product_repository.dart';
+import 'package:j_dounts_app/features/product/presentation/product_cubit.dart';
 import 'package:j_dounts_app/features/product/presentation/product_screen.dart';
 import 'package:j_dounts_app/core/network/connectivity_service.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 import 'package:j_dounts_app/app/shell/main_shell.dart';
 import 'package:j_dounts_app/app/shell/placeholder_screen.dart';
+
+export 'package:j_dounts_app/app/router/app_redirect.dart';
 
 GoRouter createAppRouter({
   required SessionNotifier sessionNotifier,
@@ -37,6 +42,7 @@ GoRouter createAppRouter({
   dobCubitFactory,
   HomeRepository? homeRepository,
   ProductRepository? productRepository,
+  ProductCubit Function(String code)? productCubitFactory,
   ConnectivityService? connectivityService,
   String initialLocation = AppRoutes.onboarding,
 }) {
@@ -188,13 +194,27 @@ GoRouter createAppRouter({
                           actionLabel: AppLocalizations.of(context).settings,
                           onAction: () => context.go(AppRoutes.settings),
                         )
-                      : HomeScreen(
-                          key: const ValueKey<String>('route:/home'),
-                          repository: resolvedHomeRepository,
-                          memberId: sessionNotifier.memberId!,
-                          onSettings: () => context.go(AppRoutes.settings),
-                          onProductTap: (code) => context.go(
-                            AppRoutes.product.replaceFirst(':productId', code),
+                      : BlocProvider(
+                          create: (_) =>
+                              (homeRepository == null &&
+                                        getIt.isRegistered<HomeBloc>()
+                                    ? getIt<HomeBloc>(
+                                        param1: sessionNotifier.memberId!,
+                                      )
+                                    : HomeBloc(
+                                        resolvedHomeRepository,
+                                        memberId: sessionNotifier.memberId!,
+                                      ))
+                                ..add(const HomeStarted()),
+                          child: HomeScreen(
+                            key: const ValueKey<String>('route:/home'),
+                            onSettings: () => context.go(AppRoutes.settings),
+                            onProductTap: (code) => context.go(
+                              AppRoutes.product.replaceFirst(
+                                ':productId',
+                                code,
+                              ),
+                            ),
                           ),
                         ),
                 ),
@@ -262,39 +282,19 @@ GoRouter createAppRouter({
                   key: ValueKey<String>('route:${state.uri.path}'),
                   title: state.uri.path,
                 )
-              : ProductScreen(
-                  key: ValueKey<String>('route:${state.uri.path}'),
-                  repository: resolvedProductRepository,
-                  code: state.pathParameters['productId']!,
+              : BlocProvider(
+                  create: (_) {
+                    final code = state.pathParameters['productId']!;
+                    return productCubitFactory?.call(code) ??
+                        ProductCubit(resolvedProductRepository, code: code);
+                  },
+                  child: ProductScreen(
+                    key: ValueKey<String>('route:${state.uri.path}'),
+                    code: state.pathParameters['productId']!,
+                  ),
                 ),
         ),
       ),
     ],
   );
-}
-
-String? appRedirect({
-  required String location,
-  required bool isAuthenticated,
-  required bool isRegistrationFlow,
-  required AuthFlowStep authFlowStep,
-}) {
-  final isAuthRoute = location.startsWith('/auth/');
-  if (isRegistrationFlow && location == AppRoutes.name) {
-    return authFlowStep == AuthFlowStep.name ? null : AppRoutes.otp;
-  }
-  if (isRegistrationFlow && location == AppRoutes.dateOfBirth) {
-    return authFlowStep == AuthFlowStep.dateOfBirth ? null : AppRoutes.name;
-  }
-  if (location == AppRoutes.welcome) {
-    if (isAuthenticated) return AppRoutes.home;
-    return isRegistrationFlow ? null : AppRoutes.onboarding;
-  }
-  if (isAuthenticated) {
-    return location == AppRoutes.onboarding || isAuthRoute
-        ? AppRoutes.home
-        : null;
-  }
-  if (location == AppRoutes.onboarding || isAuthRoute) return null;
-  return AppRoutes.onboarding;
 }

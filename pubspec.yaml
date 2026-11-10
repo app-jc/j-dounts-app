@@ -24,6 +24,7 @@ dependencies:
   path_provider: ^2.1.5
   go_router: ^18.1.3
   flutter_bloc: ^9.1.1
+  bloc_concurrency: ^0.3.0
   connectivity_plus: ^7.3.2
   font_awesome_flutter: ^11.0.0
 
@@ -42,6 +43,12 @@ flutter:
   assets:
     - assets/seed/
     - assets/images/
+    - assets/images/previews/
+    - assets/images/placeholders/
+    - assets/images/members/
+    - assets/images/gifts/
+    - assets/images/banners/
+    - assets/images/shops/
     - assets/images/products/
 
   fonts:

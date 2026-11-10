@@ -1,40 +1,52 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:j_dounts_app/app/router/app_routes.dart';
 import 'package:j_dounts_app/app/theme/app_colors.dart';
 import 'package:j_dounts_app/app/theme/app_spacing.dart';
-import 'package:j_dounts_app/core/error/result.dart';
-import 'package:j_dounts_app/core/images/app_cached_image.dart';
+import 'package:j_dounts_app/app/theme/app_typography.dart';
 import 'package:j_dounts_app/core/motion/motion.dart';
-import 'package:j_dounts_app/core/utils/formatters.dart';
-import 'package:j_dounts_app/features/product/domain/product.dart';
-import 'package:j_dounts_app/features/product/domain/product_repository.dart';
+import 'package:j_dounts_app/core/motion/reduce_motion.dart';
+import 'package:j_dounts_app/core/widgets/shimmer_box.dart';
+import 'package:j_dounts_app/features/product/presentation/product_cubit.dart';
+import 'package:j_dounts_app/features/product/presentation/product_cart_button.dart';
+import 'package:j_dounts_app/features/product/presentation/product_detail_widgets.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 
 class ProductScreen extends StatelessWidget {
-  const ProductScreen({
-    required this.repository,
-    required this.code,
-    super.key,
-  });
+  const ProductScreen({required this.code, super.key});
 
-  final ProductRepository repository;
   final String code;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Result<Product?>>(
-      stream: repository.watchByCode(code),
-      builder: (context, snapshot) {
-        final result = snapshot.data;
-        if (result == null) return const _ProductLoading();
-        return result.fold(
-          onFailure: (_) => _ProductNotFound(code: code),
-          onSuccess: (product) => product == null
-              ? _ProductNotFound(code: code)
-              : _ProductDetails(product: product),
-        );
-      },
+    return BlocListener<ProductCubit, ProductState>(
+      listenWhen: (previous, current) =>
+          !previous.addedToCart && current.addedToCart,
+      listener: _clearCartFeedback,
+      child: BlocBuilder<ProductCubit, ProductState>(
+        builder: (context, state) => switch (state.status) {
+          ProductStatus.loading => const _ProductLoading(),
+          ProductStatus.notFound ||
+          ProductStatus.failure => _ProductNotFound(code: code),
+          ProductStatus.loaded => _ProductDetails(state: state),
+        },
+      ),
     );
+  }
+
+  void _clearCartFeedback(BuildContext context, ProductState state) {
+    final delay = ReduceMotion.resolve(context, Motion.badgePop);
+    unawaited(_resetCartFeedback(context, delay));
+  }
+
+  Future<void> _resetCartFeedback(BuildContext context, Duration delay) async {
+    await Future<void>.delayed(delay);
+    if (!context.mounted) return;
+    context.read<ProductCubit>().clearCartFeedback();
   }
 }
 
@@ -42,8 +54,16 @@ class _ProductLoading extends StatelessWidget {
   const _ProductLoading();
 
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: CircularProgressIndicator()));
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.surfaceHome,
+      appBar: _ProductAppBar(onBack: () => _pop(context)),
+      body: const Padding(
+        padding: EdgeInsets.all(AppSpacing.screenHorizontalMargin),
+        child: ShimmerBox(height: ProductHeroCard.imageHeight + AppSpacing.xxl),
+      ),
+    );
+  }
 }
 
 class _ProductNotFound extends StatelessWidget {
@@ -53,97 +73,57 @@ class _ProductNotFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: AppColors.surfaceHome,
+      appBar: _ProductAppBar(onBack: () => _pop(context)),
       body: Center(
-        child: Text(
-          '${AppLocalizations.of(context).productNotFound}: $code',
-          textAlign: TextAlign.center,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Text(
+            '${localizations.productNotFound}: $code',
+            textAlign: TextAlign.center,
+            style: AppTypography.body,
+          ),
         ),
       ),
     );
   }
 }
 
-class _ProductDetails extends StatefulWidget {
-  const _ProductDetails({required this.product});
+class _ProductDetails extends StatelessWidget {
+  const _ProductDetails({required this.state});
 
-  final Product product;
-
-  @override
-  State<_ProductDetails> createState() => _ProductDetailsState();
-}
-
-class _ProductDetailsState extends State<_ProductDetails> {
-  int _quantity = 1;
-
-  void _changeQuantity(int delta) {
-    setState(() => _quantity = (_quantity + delta).clamp(1, 99));
-  }
-
-  void _addToCart() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context).addedToCart)),
-    );
-  }
+  final ProductState state;
 
   @override
   Widget build(BuildContext context) {
-    final product = widget.product;
-    final localizations = AppLocalizations.of(context);
+    final product = state.product!;
+    final cubit = context.read<ProductCubit>();
     return Scaffold(
       backgroundColor: AppColors.surfaceHome,
-      appBar: AppBar(title: Text(product.name)),
+      appBar: _ProductAppBar(onBack: () => _pop(context)),
       body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.screenHorizontalMargin,
+          AppSpacing.sm,
+          AppSpacing.screenHorizontalMargin,
+          AppSpacing.lg,
+        ),
         children: [
-          Hero(
-            tag: 'product:${product.code}',
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-              child: AppCachedImage(
-                source: product.image,
-                width: double.infinity,
-                height: 280,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  product.name,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-              ),
-              if (product.isNew) Chip(label: Text(localizations.newBadge)),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            product.description,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            formatMmk(product.priceMmk * _quantity),
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          _QuantityStepper(
-            quantity: _quantity,
-            onDecrease: () => _changeQuantity(-1),
-            onIncrease: () => _changeQuantity(1),
+          ProductHeroCard(
+            product: product,
+            quantity: state.quantity,
+            onDecrease: cubit.decrement,
+            onIncrease: cubit.increment,
           ),
           const SizedBox(height: AppSpacing.lg),
-          SizedBox(
-            height: AppSpacing.primaryButtonHeight,
-            child: FilledButton(
-              onPressed: _addToCart,
-              child: Text(localizations.addToCart),
-            ),
+          ProductDescriptionBlock(description: product.description),
+          const SizedBox(height: AppSpacing.xl),
+          ProductCartButton(
+            totalMmk: state.totalMmk,
+            addedToCart: state.addedToCart,
+            onPressed: cubit.addToCart,
           ),
         ],
       ),
@@ -151,54 +131,42 @@ class _ProductDetailsState extends State<_ProductDetails> {
   }
 }
 
-class _QuantityStepper extends StatelessWidget {
-  const _QuantityStepper({
-    required this.quantity,
-    required this.onDecrease,
-    required this.onIncrease,
-  });
+class _ProductAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _ProductAppBar({required this.onBack});
 
-  final int quantity;
-  final VoidCallback onDecrease;
-  final VoidCallback onIncrease;
+  final VoidCallback onBack;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surfaceCard,
-        borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _StepperButton(icon: Icons.remove, onPressed: onDecrease),
-          AnimatedSwitcher(
-            duration: Motion.quantityChange,
-            child: Text(
-              '$quantity',
-              key: ValueKey(quantity),
-              style: Theme.of(context).textTheme.titleLarge,
+    return AppBar(
+      backgroundColor: AppColors.surfaceHome,
+      elevation: 0,
+      leadingWidth: AppSpacing.backButtonSize + AppSpacing.md,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: AppSpacing.md),
+        child: IconButton(
+          onPressed: onBack,
+          style: IconButton.styleFrom(
+            backgroundColor: AppColors.surfaceCard,
+            fixedSize: const Size.square(AppSpacing.backButtonSize),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.fieldRadius),
             ),
           ),
-          _StepperButton(icon: Icons.add, onPressed: onIncrease),
-        ],
+          icon: const Icon(Icons.arrow_back, color: AppColors.brandPink),
+        ),
       ),
     );
   }
 }
 
-class _StepperButton extends StatelessWidget {
-  const _StepperButton({required this.icon, required this.onPressed});
-
-  final IconData icon;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) => IconButton(
-    onPressed: onPressed,
-    icon: Icon(icon),
-    color: AppColors.surfaceCard,
-    style: IconButton.styleFrom(backgroundColor: AppColors.actionBlue),
-  );
+void _pop(BuildContext context) {
+  if (context.canPop()) {
+    context.pop();
+    return;
+  }
+  context.go(AppRoutes.home);
 }

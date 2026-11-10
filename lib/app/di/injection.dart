@@ -18,8 +18,10 @@ import 'package:j_dounts_app/features/auth/presentation/session/session_notifier
 import 'package:j_dounts_app/features/auth/domain/otp_state_machine.dart';
 import 'package:j_dounts_app/features/home/data/home_repository_impl.dart';
 import 'package:j_dounts_app/features/home/domain/home_repository.dart';
+import 'package:j_dounts_app/features/home/presentation/home_bloc.dart';
 import 'package:j_dounts_app/features/product/data/product_repository_impl.dart';
 import 'package:j_dounts_app/features/product/domain/product_repository.dart';
+import 'package:j_dounts_app/features/product/presentation/product_cubit.dart';
 import 'package:j_dounts_app/features/rewards/data/rewards_repository_impl.dart';
 import 'package:j_dounts_app/features/rewards/domain/rewards_repository.dart';
 
@@ -77,6 +79,12 @@ void configureDependencies() {
       initialAttempt: params.initialAttempt,
       clock: getIt<Clock>(),
     ),
+  );
+  getIt.registerFactoryParam<ProductCubit, String, void>(
+    (code, _) => ProductCubit(getIt<ProductRepository>(), code: code),
+  );
+  getIt.registerFactoryParam<HomeBloc, int, void>(
+    (memberId, _) => HomeBloc(getIt<HomeRepository>(), memberId: memberId),
   );
   getIt.registerFactoryParam<
     DobCubit,

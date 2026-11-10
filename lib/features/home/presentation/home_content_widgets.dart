@@ -7,12 +7,13 @@ import 'package:j_dounts_app/app/theme/app_spacing.dart';
 import 'package:j_dounts_app/core/images/app_cached_image.dart';
 import 'package:j_dounts_app/core/motion/motion.dart';
 import 'package:j_dounts_app/core/motion/reduce_motion.dart';
-import 'package:j_dounts_app/core/utils/formatters.dart';
 import 'package:j_dounts_app/features/home/domain/discount_resolver.dart';
 import 'package:j_dounts_app/features/home/domain/home_data.dart';
 import 'package:j_dounts_app/features/home/presentation/home_state.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 
+/// A widget that displays a carousel of banners on the home screen,
+/// with automatic scrolling and user interaction support.
 class HomeBannerCarousel extends StatefulWidget {
   const HomeBannerCarousel({required this.banners, super.key});
 
@@ -107,6 +108,8 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
   }
 }
 
+// A widget that displays a section of products (e.g. Popular, New Arrivals) on the home screen,
+// including the section title and a horizontal list of product cards.
 class HomeProductSection extends StatelessWidget {
   const HomeProductSection({
     required this.section,
@@ -133,20 +136,14 @@ class HomeProductSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(
-                child: Text(
-                  section.title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+              if (section.type.toLowerCase() == 'popular') ...[
+                const Text('🔥'),
+                const SizedBox(width: AppSpacing.xs),
+              ],
+              Text(
+                section.title,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              if (section.seeAll)
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.chevron_right),
-                  style: IconButton.styleFrom(
-                    backgroundColor: AppColors.ringBlueLight,
-                  ),
-                ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -160,7 +157,7 @@ class HomeProductSection extends StatelessWidget {
             )
           else
             SizedBox(
-              height: section.layoutStyle == 'wide_card' ? 208 : 232,
+              height: 232,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: section.products.length,
@@ -179,6 +176,7 @@ class HomeProductSection extends StatelessWidget {
   }
 }
 
+// A simple widget to display a message for a section, such as an error or empty state.
 class _SectionMessage extends StatelessWidget {
   const _SectionMessage({required this.message});
 
@@ -191,6 +189,7 @@ class _SectionMessage extends StatelessWidget {
   );
 }
 
+// A card widget that displays a product's image, name, and discount label (if any).
 class _HomeProductCard extends StatelessWidget {
   const _HomeProductCard({
     required this.product,
@@ -210,49 +209,63 @@ class _HomeProductCard extends StatelessWidget {
     );
     return SizedBox(
       width: wide ? 164 : 152,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        margin: EdgeInsets.zero,
-        child: InkWell(
-          onTap: onTap == null ? null : () => onTap!(product.code),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Hero(
-                  tag: 'product:${product.code}',
-                  child: AppCachedImage(source: product.image),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.sm),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        onTap: onTap == null ? null : () => onTap!(product.code),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              clipBehavior: Clip.antiAlias,
+              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+              child: SizedBox(
+                height: 168,
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Text(
-                      product.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleMedium,
+                    Hero(
+                      tag: 'product:${product.code}',
+                      child: AppCachedImage(source: product.image),
                     ),
-                    if (!wide)
-                      Text(
-                        formatMmk(product.priceMmk),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.actionBlue,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
                     if (label != null)
-                      Text(
-                        label,
-                        style: const TextStyle(color: AppColors.badgeOrange),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: DecoratedBox(
+                          decoration: const BoxDecoration(
+                            color: AppColors.badgeOrange,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(AppSpacing.pillRadius),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: AppSpacing.xs,
+                            ),
+                            child: Text(
+                              label,
+                              style: Theme.of(context).textTheme.labelLarge
+                                  ?.copyWith(
+                                    color: AppColors.surfaceCard,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                            ),
+                          ),
+                        ),
                       ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              child: Text(
+                product.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+          ],
         ),
       ),
     );

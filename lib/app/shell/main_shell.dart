@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:j_dounts_app/app/theme/app_colors.dart';
-import 'package:j_dounts_app/app/theme/app_spacing.dart';
 import 'package:j_dounts_app/core/network/connectivity_service.dart';
 import 'package:j_dounts_app/core/widgets/offline_banner.dart';
 
@@ -41,15 +39,9 @@ class MainShell extends StatelessWidget {
         Expanded(child: navigationShell),
       ],
     ),
-    bottomNavigationBar: ColoredBox(
-      color: AppColors.brandPink,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        child: SlidingNavBar(
-          currentIndex: navigationShell.currentIndex,
-          onDestinationSelected: navigationShell.goBranch,
-        ),
-      ),
+    bottomNavigationBar: SlidingNavBar(
+      currentIndex: navigationShell.currentIndex,
+      onDestinationSelected: navigationShell.goBranch,
     ),
   );
 }

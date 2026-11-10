@@ -1,65 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:j_dounts_app/app/theme/app_colors.dart';
 import 'package:j_dounts_app/app/theme/app_spacing.dart';
-import 'package:j_dounts_app/core/error/result.dart';
 import 'package:j_dounts_app/core/widgets/shimmer_box.dart';
 import 'package:j_dounts_app/features/home/domain/home_data.dart';
-import 'package:j_dounts_app/features/home/domain/home_repository.dart';
+import 'package:j_dounts_app/features/home/presentation/home_bloc.dart';
 import 'package:j_dounts_app/features/home/presentation/home_content_widgets.dart';
 import 'package:j_dounts_app/features/home/presentation/home_shell_widgets.dart';
 import 'package:j_dounts_app/features/home/presentation/home_state.dart';
 import 'package:j_dounts_app/l10n/app_localizations.dart';
 
+/// The main screen for the home feature, displaying banners, product sections, and nearby shops.
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({
-    required this.repository,
-    required this.memberId,
-    this.onSettings,
-    this.onProductTap,
-    this.sectionStates = const {},
-    super.key,
-  });
+  const HomeScreen({this.onSettings, this.onProductTap, super.key});
 
-  final HomeRepository repository;
-  final int memberId;
   final VoidCallback? onSettings;
   final ValueChanged<String>? onProductTap;
-  final Map<String, HomeSectionState> sectionStates;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Result<HomeData>>(
-      stream: repository.watchHome(memberId),
-      builder: (context, snapshot) {
-        final result = snapshot.data;
-        if (result == null) return const _HomeLoading();
-        return result.fold(
-          onFailure: (_) => _HomeFailure(onRetry: () async {}),
-          onSuccess: (data) => _HomeContent(
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        final previous = switch (state) {
+          HomeLoading(:final previous) => previous,
+          HomeFailure(:final previous) => previous,
+          _ => null,
+        };
+        if (state is HomeLoaded || previous != null) {
+          final data = state is HomeLoaded ? state.data : previous!;
+          return _HomeContent(
             data: data,
             onSettings: onSettings,
             onProductTap: onProductTap,
-            sectionStates: sectionStates,
-          ),
-        );
+            sectionStates: state is HomeLoaded ? state.sectionStates : const {},
+            showError: state is HomeFailure,
+          );
+        }
+        if (state is HomeFailure) {
+          return _HomeFailure(
+            onRetry: () => context.read<HomeBloc>().add(const HomeStarted()),
+          );
+        }
+        return const _HomeLoading();
       },
     );
   }
 }
 
+/// A widget that displays the content of the home screen, including banners, product sections, and nearby shops.
 class _HomeContent extends StatelessWidget {
   const _HomeContent({
     required this.data,
     this.onSettings,
     this.onProductTap,
     this.sectionStates = const {},
+    this.showError = false,
   });
 
   final HomeData data;
   final VoidCallback? onSettings;
   final ValueChanged<String>? onProductTap;
   final Map<String, HomeSectionState> sectionStates;
+  final bool showError;
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +71,24 @@ class _HomeContent extends StatelessWidget {
       backgroundColor: AppColors.surfaceHome,
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: () async {},
+          onRefresh: () async {
+            context.read<HomeBloc>().add(const HomeRefreshRequested());
+          },
           child: CustomScrollView(
             slivers: [
+              if (showError)
+                SliverToBoxAdapter(
+                  child: MaterialBanner(
+                    content: Text(localizations.homeSectionError),
+                    actions: [
+                      TextButton(
+                        onPressed: () =>
+                            context.read<HomeBloc>().add(const HomeStarted()),
+                        child: Text(localizations.retry),
+                      ),
+                    ],
+                  ),
+                ),
               SliverToBoxAdapter(
                 child: HomeMemberHeader(
                   member: data.member,
@@ -104,6 +122,7 @@ class _HomeContent extends StatelessWidget {
   }
 }
 
+/// A widget that displays a loading indicator while the home screen is loading.
 class _HomeLoading extends StatelessWidget {
   const _HomeLoading();
 
@@ -128,10 +147,11 @@ class _HomeLoading extends StatelessWidget {
   }
 }
 
+/// A widget that displays an error message and a retry button when the home screen fails to load.
 class _HomeFailure extends StatelessWidget {
   const _HomeFailure({required this.onRetry});
 
-  final Future<void> Function() onRetry;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {

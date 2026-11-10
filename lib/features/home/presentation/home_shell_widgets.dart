@@ -119,72 +119,84 @@ class HomeShopSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (shops.isEmpty) return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.md,
-        AppSpacing.lg,
-        AppSpacing.md,
-        AppSpacing.md,
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: AppColors.ringBlueLight,
-          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(AppLocalizations.of(context).exploreNow),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              for (final shop in shops)
-                Card(
-                  margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 2.2,
-                        child: AppCachedImage(source: shop.photo),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(AppSpacing.sm),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                shop.name,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ),
-                            Text(
-                              AppLocalizations.of(context).orderOnline,
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(color: AppColors.brandPink),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
+              ),
             ],
           ),
-        ),
+          const SizedBox(height: AppSpacing.md),
+          SizedBox(
+            height: 224,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: shops.length,
+              separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.md),
+              itemBuilder: (context, index) {
+                final shop = shops[index];
+                return SizedBox(
+                  width: 280,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceCard,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.cardRadius,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.cardRadius,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 148,
+                            width: double.infinity,
+                            child: AppCachedImage(source: shop.photo),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(AppSpacing.sm),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  shop.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                ),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  AppLocalizations.of(context).orderOnline,
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: AppColors.brandPink,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
